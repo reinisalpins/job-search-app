@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel 10 with Vue.js</title>
+    <title>Karjeras iespējas IT nozarē</title>
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body>

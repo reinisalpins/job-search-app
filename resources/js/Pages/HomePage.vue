@@ -3,7 +3,7 @@
         <div class="container">
             <h1>Atrodi savu vietu IT nozarē</h1>
             <div class='home-links'>
-                <span>Darba vakances</span>
+                <router-link to="/vakances"><span>Darba vakances</span></router-link>
                 <span>Prakses vietas</span>
             </div>
         </div>
@@ -100,6 +100,7 @@ const cardsData = [
     .home-links {
         display: flex;
         gap: 25px;
+        align-items: center;
 
         @media screen and (max-width: 650px) {
             gap: 13px;

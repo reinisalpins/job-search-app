@@ -43,3 +43,102 @@ body {
 li {
   list-style-type: none;
 }
+
+a {
+  text-decoration: none;
+}
+
+.auth-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+@media screen and (max-width: 1250px) {
+  .auth-container {
+    padding-top: 65px;
+  }
+}
+.auth-container .auth-form-container {
+  max-width: 1600px;
+  width: 100%;
+  padding: 20px 50px;
+  display: flex;
+  align-items: center;
+  min-height: 500px;
+}
+@media screen and (max-width: 1000px) {
+  .auth-container .auth-form-container {
+    padding: 20px 20px;
+    flex-direction: column;
+  }
+}
+.auth-container .auth-form-container .text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.auth-container .auth-form-container .text-container h1 {
+  font-size: 3.5rem;
+  text-align: center;
+}
+@media screen and (max-width: 1300px) {
+  .auth-container .auth-form-container .text-container {
+    width: auto;
+    min-height: 100px;
+    padding: 10px;
+  }
+  .auth-container .auth-form-container .text-container h1 {
+    font-size: 3rem !important;
+  }
+}
+.auth-container .auth-form-container .form-container {
+  flex: 1;
+}
+@media screen and (max-width: 1000px) {
+  .auth-container .auth-form-container .form-container {
+    width: 100%;
+  }
+}
+.auth-container .auth-form-container .form-container form {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+}
+@media screen and (max-width: 1300px) {
+  .auth-container .auth-form-container .form-container form {
+    width: 100%;
+  }
+}
+.auth-container .auth-form-container .form-container form input {
+  border-top: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom: none;
+  padding: 15px;
+  outline: none;
+  font-size: 17px;
+}
+.auth-container .auth-form-container .form-container form input:focus {
+  outline: none;
+}
+.auth-container .auth-form-container .form-container form .submit-btn {
+  background-color: #1c1c1c;
+  color: #fff;
+  text-transform: uppercase;
+}
+.auth-container .auth-form-container .form-container form .submit-btn:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.validation-container {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.validation-container .validation-err {
+  color: #ff6b6b;
+  font-size: 1rem;
+  font-weight: bold;
+}

@@ -3,14 +3,14 @@
         <div class="nav-container" v-if="width >= 1250">
             <router-link style="color: white" to="/"><img src="/assets/logo-white.png"/></router-link>
             <ul>
-                <li v-for="(item, index) in navItems" :key="index">
+                <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
                     <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>
                 </li>
             </ul>
         </div>
         <div class="hamburger-nav" v-if="width < 1250">
             <div class="logo-container">
-                <img src="/assets/logo-white.png"/>
+                <router-link to="/"><img src="/assets/logo-white.png"/></router-link>
             </div>
             <div class="hamburger-icon">
                 <button @click="showSb">
@@ -20,14 +20,14 @@
         </div>
         <div :class="showSideBar ? 'side-nav open' : 'side-nav'">
             <ul :class="showClassChange">
-                <li v-for="(item, index) in navItems" :key="index">
+                <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
                     <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>
                 </li>
             </ul>
-            <div :class="showSideBar ? 'logo-side-nav show' : 'hide'">
+            <div :class="showClassChange" class="logo-side-nav">
                 <img src="/assets/logo-white.png"/>
             </div>
-            <div class="close-btn">
+            <div class="close-btn" v-if="showSideBar">
                 <button @click="showSb">
                     <i class="pi pi-times" style="font-size: 2rem; color: white "></i>
                 </button>
@@ -37,20 +37,38 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useWindowSize} from '@vueuse/core'
+import {useRoute} from "vue-router";
+import { useStore } from 'vuex';
 
 const {width, height} = useWindowSize()
 const showSideBar = ref(false)
-const showClassChange = ref('')
+const showClassChange = ref('hide')
+const route = useRoute();
 
-const navItems = [
+const store = useStore();
+
+const isLoggedIn = computed(() => store.getters.isLoggedIn);
+const user = computed(() => store.state.user);
+
+const navItems = ref([
     {path: '/vakances', label: 'Darba vakances'},
     {path: '/prakse', label: 'Prakse'},
     {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
     {path: '/darba-devejiem', label: 'Darba devējiem'},
     {path: '/ielogoties', label: 'Ielogoties', className: 'login'},
-];
+]);
+
+watch(isLoggedIn, (loggedIn) => {
+    navItems.value = [
+        {path: '/vakances', label: 'Darba vakances'},
+        {path: '/prakse', label: 'Prakse'},
+        {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
+        {path: '/darba-devejiem', label: 'Darba devējiem'},
+        {path: loggedIn ? '/profils' : '/ielogoties', label: loggedIn ? 'Profils' : 'Ielogoties', className: 'login'},
+    ];
+});
 
 const showSb = () => {
     showSideBar.value = !showSideBar.value
@@ -61,6 +79,9 @@ const showSb = () => {
     } else {
         showClassChange.value = 'hide'
     }
+}
+const isActive = (path) => {
+    return route.path === path;
 }
 
 </script>
@@ -257,6 +278,13 @@ nav {
 
 .show {
     display: flex !important;
+}
+
+.active {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-thickness: 5px;
+    text-decoration-color: #234E70;
 }
 </style>
 
