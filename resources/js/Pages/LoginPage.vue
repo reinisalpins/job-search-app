@@ -21,7 +21,7 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import {ref, watchEffect} from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import {getUserData} from "../../api/axios";
@@ -43,14 +43,23 @@ const login = async () => {
 
         localStorage.setItem('auth_token', response.data.token);
 
-        // await store.dispatch('setUser', response.data.user);
-
         await getUserData()
         await router.push('/profils');
     } catch (error) {
         errMessage.value = 'Invalid email or password';
     }
 };
+
+watchEffect(() => {
+    const isLoggedIn = store.getters.isLoggedIn;
+    const redirect = () => {
+        if(isLoggedIn) {
+             router.push('/profils');
+        }
+    }
+    redirect()
+});
+
 </script>
 
 <style lang="scss">
