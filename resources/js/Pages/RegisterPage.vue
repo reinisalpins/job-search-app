@@ -12,7 +12,7 @@
                     <input v-model="email" type="email" placeholder="Tavs e-pasts"/>
                     <input v-model="password" type="password" placeholder="Tava parole"/>
                     <input v-model="passwordRepeat" type="password" placeholder="Parole atkārtoti"/>
-                    <input type="submit" class="submit-btn" value="Reģistrēties"/>
+                    <Button class="submit-btn" :loading="loading" type="submit" label="Reģistrēties"/>
                     <div class="validation-container">
                         <div>
                             <span class="validation-err">{{ errMessage }}</span>
@@ -29,6 +29,7 @@ import {ref, watchEffect} from 'vue';
 import {getUserData} from "../../api/axios";
 import router from "../router";
 import {useStore} from "vuex";
+import Button from "primevue/button";
 
 const store = useStore();
 const firstName = ref('');
@@ -38,6 +39,7 @@ const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
 const errMessage = ref('');
+const loading = ref(false)
 
 const handleSubmit = () => {
     if (validateFields()) {
@@ -46,7 +48,6 @@ const handleSubmit = () => {
 };
 
 const validateFields = () => {
-
     if (firstName.value.trim() === '') {
         errMessage.value = 'Ievadiet savu vārdu'
         return false;
@@ -85,6 +86,7 @@ const validateFields = () => {
 
 const registerUser = async () => {
     try {
+        loading.value = true
         const response = await axios.post('/api/register', {
             first_name: firstName.value,
             last_name: lastName.value,
@@ -99,8 +101,10 @@ const registerUser = async () => {
 
             await getUserData()
             await router.push('/profils');
+            loading.value = false
         }
     } catch (error) {
+        loading.value = false
         errMessage.value = error.response.data.message;
     }
 };
