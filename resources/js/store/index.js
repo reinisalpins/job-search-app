@@ -1,6 +1,10 @@
 import { createStore } from 'vuex';
+import profileStore from "./modules/profile";
 
 export default createStore({
+    modules: {
+        profile: profileStore
+    },
     state: {
         user: null,
     },

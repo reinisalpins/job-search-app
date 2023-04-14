@@ -1,5 +1,6 @@
 <template>
     <div class="main">
+        <Toast/>
         <div class="main-flex-item">
             <NavBar/>
             <router-view></router-view>
@@ -20,7 +21,7 @@ export default {
     name: 'App',
     components: {
         Footer,
-        NavBar
+        NavBar,
     },
     async created() {
         await getUserData();
