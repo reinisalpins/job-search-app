@@ -3,15 +3,8 @@
         <div class="container">
             <h2>Sveiki, {{ user?.first_name || 'User' }}</h2>
             <p>E-pasts: {{ user?.email || 'N/A' }}</p>
-            <Button label="izlogoties" class="btn-bg" @click="logout"/>
-            <Button label="Labot profila informāciju" @click="visible = true"/>
-            <Dialog v-model:visible="visible" :draggable="false" modal header="Profila informācija"
-                    :style="{ width: '50vw' }">
-               <span class="p-float-label">
-                    <Chips id="chips" v-model="skills"/>
-                    <label for="chips">Tavas prasmes</label>
-                </span>
-            </Dialog>
+            <Button label="izlogoties" class="btn-bg" :loading="loading" @click="logoutUser"/>
+            <UserInfoModal></UserInfoModal>
         </div>
     </div>
 </template>
@@ -20,20 +13,19 @@
 import {computed, ref} from 'vue';
 import {useStore} from 'vuex';
 import {logout} from "../../api/axios";
-import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
-import Chips from 'primevue/chips';
+import UserInfoModal from "../components/Profile/UserInfoModal.vue";
 
 const skills = ref();
-
 const store = useStore();
-
 const user = computed(() => store.state.user);
-
 const visible = ref(false);
-const logoutUser = () => {
-    logout()
-    store.dispatch('setUser', null);
+const loading = ref(false)
+const logoutUser = async () => {
+    loading.value = true
+    await logout()
+    await store.dispatch('setUser', null);
+    loading.value = false
 }
 </script>
 
