@@ -126,10 +126,16 @@ a {
   background-color: #1c1c1c;
   color: #fff;
   text-transform: uppercase;
+  border-radius: 0 !important;
+  border: none;
+  justify-content: center !important;
 }
 .auth-container .auth-form-container .form-container form .submit-btn:hover {
   opacity: 0.9;
   cursor: pointer;
+}
+.auth-container .auth-form-container .form-container form .submit-btn:focus {
+  box-shadow: none !important;
 }
 
 .validation-container {

@@ -8,7 +8,7 @@
                 <form @submit.prevent="login">
                     <input type="email" v-model="email" placeholder="Tavs e-pasts" />
                     <input type="password" v-model="password" placeholder="Tava parole" />
-                    <input type="submit" class="submit-btn" value="Ielogoties" />
+                    <Button class="submit-btn" :loading="loading" type="submit" label="Ielogoties"/>
                     <div class="validation-container">
                         <div>
                             <span class="validation-err">{{ errMessage }}</span>
@@ -25,9 +25,11 @@ import {ref, watchEffect} from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import {getUserData} from "../../api/axios";
+import Button from "primevue/button";
 
 const store = useStore();
 const router = useRouter();
+const loading = ref(false)
 
 const errMessage = ref('');
 const email = ref('');
@@ -35,6 +37,7 @@ const password = ref('');
 
 const login = async () => {
     try {
+        loading.value = true
         await axios.get('/sanctum/csrf-cookie');
         const response = await axios.post('/api/login', {
             email: email.value,
@@ -45,8 +48,10 @@ const login = async () => {
 
         await getUserData()
         await router.push('/profils');
+        loading.value = false
     } catch (error) {
         errMessage.value = 'Invalid email or password';
+        loading.value = false
     }
 };
 
