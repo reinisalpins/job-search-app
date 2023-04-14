@@ -25,10 +25,12 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import {ref, watchEffect} from 'vue';
 import {getUserData} from "../../api/axios";
 import router from "../router";
+import {useStore} from "vuex";
 
+const store = useStore();
 const firstName = ref('');
 const lastName = ref('');
 const phone = ref('');
@@ -102,6 +104,16 @@ const registerUser = async () => {
         errMessage.value = error.response.data.message;
     }
 };
+
+watchEffect(() => {
+    const isLoggedIn = store.getters.isLoggedIn;
+    const redirect = () => {
+        if(isLoggedIn) {
+            router.push('/profils');
+        }
+    }
+    redirect()
+});
 </script>
 
 <style lang="scss">
