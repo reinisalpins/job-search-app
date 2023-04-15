@@ -3,8 +3,10 @@
 namespace App\Http\Requests\User;
 
 use App\DataTransferObjects\User\GetUserProfileDataTransferObject;
+use App\Models\User\UserProfile;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class GetUserProfileInfoRequest extends FormRequest
@@ -14,7 +16,10 @@ class GetUserProfileInfoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $userId = $this->route('userId');
+        $profile = UserProfile::where('user_id', $userId)->first();
+
+        return $profile !== null;
     }
 
     public function rules(): array

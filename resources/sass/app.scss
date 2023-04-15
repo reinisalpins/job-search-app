@@ -124,23 +124,6 @@ a {
                         outline: none;
                     }
                 }
-
-                .submit-btn {
-                    background-color: #1c1c1c;
-                    color: #fff;
-                    text-transform: uppercase;
-                    border-radius: 0 !important;
-                    border: none;
-                    justify-content: center !important;
-
-                    &:hover {
-                        opacity: .9;
-                        cursor: pointer;
-                    }
-                    &:focus {
-                        box-shadow: none !important;
-                    }
-                }
             }
         }
     }
@@ -155,5 +138,21 @@ a {
         color: #ff6b6b;
         font-size: 1rem;
         font-weight: bold;
+    }
+}
+.submit-btn {
+    background-color: #1c1c1c !important;
+    color: #fff !important;
+    text-transform: uppercase !important;
+    border-radius: 0 !important;
+    border: none !important;
+    justify-content: center !important;
+
+    &:hover {
+        opacity: .9;
+        cursor: pointer;
+    }
+    &:focus {
+        box-shadow: none !important;
     }
 }

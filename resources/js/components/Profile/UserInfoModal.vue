@@ -1,5 +1,6 @@
 <template>
-    <Button label="Profila informācija" @click="showModal"/>
+<!--    <Button :label="buttonLabel" @click="showModal"/>-->
+    <button @click="showModal" class="submit-btn modal-btn">{{buttonLabel}}</button>
     <Dialog v-model:visible="visible" :draggable="false" modal header="Profila informācija" :style="{ width: '50vw' }"
             :breakpoints="{ '960px': '75vw', '641px': '90vw' }">
         <div class="input-form-container">
@@ -13,7 +14,7 @@
             <h3 style="padding-top: 20px">Tava atrašanās vieta: </h3>
             <InputText type="text" v-model="selectedLocation" placeholder="Atrašanās vieta"/>
             <span></span>
-            <Button :loading="loading" label="Saglabāt" @click="submitProfile"/>
+            <Button :loading="loading" label="Saglabāt" class="submit-btn modal-btn" @click="submitProfile"/>
         </div>
     </Dialog>
 </template>
@@ -25,15 +26,24 @@ import {useStore} from "vuex";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Listbox from "primevue/listbox";
-import { useToast } from "primevue/usetoast";
+import {useToast} from "primevue/usetoast";
+
 const toast = useToast();
-
 const store = useStore();
-
-const user = computed(() => store.state.user);
-const profileInfo = computed(() => store.state.profile.userProfileInfo);
 const selectedSkills = ref();
 const loading = ref(false)
+
+const props = defineProps({
+    isProfileInfoSet: {
+        type: Boolean,
+        required: true
+    },
+    profileInfo: Object
+})
+
+const buttonLabel = computed(() => {
+    return props.isProfileInfoSet ? 'Labot profila informāciju' : 'Iestatīt profila informāciju';
+});
 
 const selectedLocation = ref()
 const itSkills = ref([
@@ -91,7 +101,6 @@ const itSkills = ref([
 ]);
 
 const selectedExperience = ref();
-
 const experience = ref([
     {name: '0-1 gads'},
     {name: '1-2 gadi'},
@@ -99,8 +108,8 @@ const experience = ref([
     {name: '5+ gadi'},
 ]);
 
-const selectedEducation = ref();
 
+const selectedEducation = ref();
 const education = ref([
     {name: 'Pamatizglītība'},
     {name: 'Vidējā izglītība'},
@@ -109,19 +118,16 @@ const education = ref([
 
 const showModal = async () => {
     visible.value = true;
-    await getProfileInfo();
-}
-
-const getProfileInfo = async () => {
-    await store.dispatch('profile/fetchProfileInfo', user.value.id);
-    setSelectedValues();
+    if (props.isProfileInfoSet) {
+        setSelectedValues();
+    }
 }
 
 const visible = ref(false);
 
 const submitProfile = async () => {
     const payload = {
-        user_id: user.value.id,
+        user_id: store.state.user.id,
         skills: selectedSkills.value.map(skill => skill.name),
         experience: selectedExperience.value.name,
         education: selectedEducation.value.name,
@@ -131,34 +137,51 @@ const submitProfile = async () => {
     loading.value = true
 
     try {
-        if (profileInfo.value) {
-            await store.dispatch('profile/updateProfileInfo', {userId: user.value.id, payload});
+        if (props.profileInfo) {
+            await store.dispatch('profile/updateProfileInfo', {userId: store.state.user.id, payload});
         } else {
-            await store.dispatch('profile/createProfileInfo', {userId: user.value.id, payload});
+            await store.dispatch('profile/createProfileInfo', {userId: store.state.user.id, payload});
         }
     } catch (error) {
         console.error(error);
-        toast.add({ severity: 'error', summary: 'Kļūda', detail: 'Nevarēja saglabāt profilu', life: 3000 });
+        toast.add({severity: 'error', summary: 'Kļūda', detail: 'Nevarēja saglabāt profilu', life: 3000});
     } finally {
-        toast.add({ severity: 'success', summary: 'Profils', detail: 'Profila informācija saglabāta veiksmīgi', life: 3000 });
+        toast.add({
+            severity: 'success',
+            summary: 'Profils',
+            detail: 'Profila informācija saglabāta veiksmīgi',
+            life: 3000
+        });
         loading.value = false
     }
 };
 
 const setSelectedValues = () => {
-    if (profileInfo.value) {
-        selectedSkills.value = itSkills.value.filter(skill => profileInfo.value.skills.includes(skill.name));
-        selectedExperience.value = experience.value.find(exp => exp.name === profileInfo.value.experience);
-        selectedEducation.value = education.value.find(edu => edu.name === profileInfo.value.education);
-        selectedLocation.value = profileInfo.value.location;
+    if (props.profileInfo) {
+        selectedSkills.value = itSkills.value.filter(skill => props.profileInfo.skills.includes(skill.name));
+        selectedExperience.value = experience.value.find(exp => exp.name === props.profileInfo.experience);
+        selectedEducation.value = education.value.find(edu => edu.name === props.profileInfo.education);
+        selectedLocation.value = props.profileInfo.location;
     }
 };
 
+defineExpose({
+    showModal
+});
 </script>
+
 <style lang="scss">
 .input-form-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.modal-btn {
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 3px !important;
+    width: 100%;
+    font-weight: bold;
 }
 </style>
