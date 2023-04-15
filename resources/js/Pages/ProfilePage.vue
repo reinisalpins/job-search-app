@@ -1,50 +1,116 @@
 <template>
     <div class="profile-container">
-        <div class="container">
-            <div class="profile-info-container">
-<!--            <h2>Sveiki, {{ user?.first_name || 'User' }}</h2>-->
-<!--            <p>E-pasts: {{ user?.email || 'N/A' }}</p>-->
-<!--            <Button label="izlogoties" class="btn-bg" :loading="loading" @click="logoutUser"/>-->
-<!--            <UserInfoModal></UserInfoModal>-->
-                <div class="profile-picture">
-                    <img src="/assets/logo.png"/>
+        <div class="container" style="position: relative">
+            <div v-if="!isProfileInfoLoaded" class="loading-profile-spinner">
+                <ProgressSpinner/>
+            </div>
+            <div v-if="isProfileInfoLoaded" class="profile-info-container">
+                <div class="left-side">
+                    <div class="profile-picture">
+                        <img
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"/>
+                    </div>
+                    <div v-if="!loadingProfileInfo">
+                        <UserInfoModal :is-profile-info-set="isProfileInfoSet" ref="userInfoModal"
+                                       :profile-info="profileInfoValue"/>
+                    </div>
                 </div>
-                <div class="user-info">
-                    Jūsu vārds: {{user.first_name}} {{user.last_name}}
+                <div class="right-side">
+                    <div class="profile-heading">
+                        <h1>{{ user?.first_name }} {{ user?.last_name }}</h1>
+                    </div>
+                    <hr>
+                    <div class="profile-info" v-if="isProfileInfoSet">
+                        <h3>profila informācija</h3>
+                        <div class="profile-set-info">
+<!--                            <div class="headings">-->
+<!--                                <span>Tavas prasmes:</span>-->
+<!--                                <span>Tava pieredze: </span>-->
+<!--                                <span>Tava izglītība: </span>-->
+<!--                                <span>Tava atrašanās vieta: </span>-->
+<!--                            </div>-->
+<!--                            <div class="values">-->
+<!--                                <span>{{ profileInfoValue.skills.toString() }}</span>-->
+<!--                                <span>{{ profileInfoValue.experience }} </span>-->
+<!--                                <span>{{ profileInfoValue.education }} </span>-->
+<!--                                <span>{{ profileInfoValue.location }} </span>-->
+<!--                            </div>-->
+                            <div class="headings">
+                                <span>Tavas prasmes: <span class="values">{{profileInfoValue.skills.toString()}}</span></span>
+                                <span>Tava pieredze: <span class="values">{{profileInfoValue.experience}}</span></span>
+                                <span>Tava izglītība: <span class="values"> {{ profileInfoValue.education }}</span></span>
+                                <span>Tava atrašanās vieta: <span class="values">{{profileInfoValue.location}}</span></span>
+                            </div>
+                        </div>
+                        <hr>
+
+
+                    </div>
+                    <div class="profile-unset-info" v-if="!isProfileInfoSet">
+                        <p>Lai veiktu tālākas darbības lūdzu pievienojiet informāciju par sevi
+                            <span @click="showModal">šeit</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
-
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useStore} from 'vuex';
-import {logout} from "../../api/axios";
-import Button from 'primevue/button';
 import UserInfoModal from "../components/Profile/UserInfoModal.vue";
+import ProgressSpinner from "primevue/progressspinner";
+import {logout} from "../../api/axios";
 
-const skills = ref();
 const store = useStore();
+const userInfoModal = ref(null);
+
 const user = computed(() => store.state.user);
-const visible = ref(false);
-const loading = ref(false)
-const logoutUser = async () => {
-    loading.value = true
-    await logout()
-    await store.dispatch('setUser', null);
-    loading.value = false
+const isProfileInfoLoaded = computed(() => !store.state.profile.loadingProfileInfo);
+
+const loadData = async () => {
+    await store.dispatch('profile/fetchProfileInfo', user.value.id);
+};
+
+const showModal = () => {
+    userInfoModal.value.showModal();
 }
+onMounted(() => {
+    if (user.value) {
+        loadData();
+    }
+});
+
+watch(user, (newUser) => {
+    if (newUser) {
+        store.dispatch('profile/fetchProfileInfo', newUser.id);
+    }
+});
+
+const isProfileInfoSet = computed(() => isProfileInfoLoaded.value && store.getters['profile/getProfileInfo'] !== null);
+const profileInfo = computed(() => store.state.profile.userProfileInfo);
+const loadingProfileInfo = computed(() => store.state.profile.loadingProfileInfo);
+
+const profileInfoValue = computed(() => {
+    if (!loadingProfileInfo.value && profileInfo.value !== null) {
+        return profileInfo.value;
+    }
+    return null;
+});
+
+const logoutUser = async () => {
+    await store.dispatch('logout');
+    await store.dispatch('setUser', null);
+};
 </script>
-
 <style lang="scss">
-
 .profile-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .edit-container {
@@ -64,36 +130,114 @@ const logoutUser = async () => {
     padding-top: 20px !important;
 }
 
-.profile-info-container{
+.profile-info-container {
     width: 100%;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    padding: 20px;
     display: flex;
-    flex-direction: column;
-    gap: 50px;
-    //flex-wrap: wrap-reverse;
-    //align-items: left;
+    gap: 100px;
 
-    .profile-picture {
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-        padding: 10px;
-        border-radius: 2px;
-        max-width: 250px;
-        max-height: 200px;
-        width: 100%;
-        height: 100%;
-        img {
-            //max-width: 250px;
-            //max-height: 200px;
+    @media screen and (max-width: 740px) {
+        gap: 30px;
+    }
+    flex-wrap: wrap;
+
+    .left-side {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        flex: 0 1 auto;
+
+        .profile-picture {
+            display: flex;
+            max-width: 250px;
+            max-height: 250px;
             width: 100%;
             height: 100%;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 
-    .user-info {
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-        padding: 10px;
-        border-radius: 2px;
+    .right-side {
+        flex: 2 1 auto;
+        display: flex;
+        //gap: 25px;
+        flex-direction: column;
+
+        .profile-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            h1 {
+                color: #4b4b4b;
+            }
+        }
+
+        h3 {
+            text-transform: uppercase;
+            font-size: 15px;
+            color: #a9a8a8;
+            font-weight: normal;
+        }
+    }
+}
+
+.location-info {
+    font-size: 20px;
+}
+
+hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.profile-unset-info {
+    margin-top: 20px;
+    background-color: red;
+    padding: 20px;
+    color: white;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+
+    span {
+        text-decoration: underline;
+        font-size: 20px;
+        cursor: pointer;
+
+        &:hover {
+            opacity: .8;
+        }
+    }
+}
+
+.profile-set-info {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+
+    .headings {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-transform: uppercase;
+
+        span {
+            font-weight: normal;
+            color: #a9a8a8;
+            font-size: 17px;
+        }
+
+        .values {
+            margin-left: 15px;
+            font-weight: bold;
+            color: #6b6a6a;
+            font-size: 17px;
+        }
     }
 }
 </style>
