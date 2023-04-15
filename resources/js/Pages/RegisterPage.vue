@@ -15,7 +15,7 @@
                     <Button class="submit-btn" :loading="loading" type="submit" label="Reģistrēties"/>
                     <div class="validation-container">
                         <div>
-                            <span class="validation-err">{{ errMessage }}</span>
+                            <InlineMessage severity="error" v-if="errMessage">{{ errMessage }}</InlineMessage>
                         </div>
                         <router-link to="/ielogoties">Ielogoties</router-link>
                     </div>
@@ -30,6 +30,7 @@ import {getUserData} from "../../api/axios";
 import router from "../router";
 import {useStore} from "vuex";
 import Button from "primevue/button";
+import InlineMessage from "primevue/inlinemessage";
 
 const store = useStore();
 const firstName = ref('');
@@ -112,7 +113,7 @@ const registerUser = async () => {
 watchEffect(() => {
     const isLoggedIn = store.getters.isLoggedIn;
     const redirect = () => {
-        if(isLoggedIn) {
+        if (isLoggedIn) {
             router.push('/profils');
         }
     }
