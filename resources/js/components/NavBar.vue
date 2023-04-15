@@ -64,7 +64,7 @@ watch(isLoggedIn, (loggedIn) => {
     navItems.value = [
         {path: '/vakances', label: 'Darba vakances'},
         {path: '/prakse', label: 'Prakse'},
-        {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
+        // {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
         {path: '/darba-devejiem', label: 'Darba devējiem'},
         {path: loggedIn ? '/profils' : '/ielogoties', label: loggedIn ? 'Profils' : 'Ielogoties', className: 'login'},
     ];

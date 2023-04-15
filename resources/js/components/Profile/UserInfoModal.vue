@@ -1,6 +1,5 @@
 <template>
-<!--    <Button :label="buttonLabel" @click="showModal"/>-->
-    <button @click="showModal" class="submit-btn modal-btn">{{buttonLabel}}</button>
+    <button @click="showModal" class="submit-btn modal-btn">{{ buttonLabel }}</button>
     <Dialog v-model:visible="visible" :draggable="false" modal header="Profila informācija" :style="{ width: '50vw' }"
             :breakpoints="{ '960px': '75vw', '641px': '90vw' }">
         <div class="input-form-container">

@@ -37,10 +37,10 @@ const logout = async () => {
         await authAxios.post('/logout');
         localStorage.removeItem('auth_token');
         await store.dispatch('setUser', null);
-        await router.push('/ielogoties')
     } catch (error) {
         console.error('Error logging out:', error);
     }
 };
 
-export { authAxios, getUserData, logout };
+
+export {authAxios, getUserData, logout};

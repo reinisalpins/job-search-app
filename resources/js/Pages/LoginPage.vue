@@ -11,7 +11,7 @@
                     <Button class="submit-btn" :loading="loading" type="submit" label="Ielogoties"/>
                     <div class="validation-container">
                         <div>
-                            <span class="validation-err">{{ errMessage }}</span>
+                            <InlineMessage severity="error" v-if="errMessage">{{ errMessage }}</InlineMessage>
                         </div>
                         <router-link to="/registreties">Reģistrēties</router-link>
                     </div>
@@ -22,11 +22,11 @@
 </template>
 <script setup>
 import {ref, watchEffect} from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import {useStore} from 'vuex';
+import {useRouter} from 'vue-router';
 import {getUserData} from "../../api/axios";
 import Button from "primevue/button";
-
+import InlineMessage from "primevue/inlinemessage";
 const store = useStore();
 const router = useRouter();
 const loading = ref(false)
@@ -50,7 +50,7 @@ const login = async () => {
         await router.push('/profils');
         loading.value = false
     } catch (error) {
-        errMessage.value = 'Invalid email or password';
+        errMessage.value = 'Nepareizs e-pasts vai/un parole';
         loading.value = false
     }
 };
@@ -58,8 +58,8 @@ const login = async () => {
 watchEffect(() => {
     const isLoggedIn = store.getters.isLoggedIn;
     const redirect = () => {
-        if(isLoggedIn) {
-             router.push('/profils');
+        if (isLoggedIn) {
+            router.push('/profils');
         }
     }
     redirect()

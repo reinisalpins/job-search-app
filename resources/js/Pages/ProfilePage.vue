@@ -14,6 +14,9 @@
                         <UserInfoModal :is-profile-info-set="isProfileInfoSet" ref="userInfoModal"
                                        :profile-info="profileInfoValue"/>
                     </div>
+                    <div class="logout">
+                        <Button :loading="logoutLoading" label="Izlogoties" @click="logoutUser" class="submit-btn logout-btn"/>
+                    </div>
                 </div>
                 <div class="right-side">
                     <div class="profile-heading">
@@ -23,18 +26,6 @@
                     <div class="profile-info" v-if="isProfileInfoSet">
                         <h3>profila informācija</h3>
                         <div class="profile-set-info">
-<!--                            <div class="headings">-->
-<!--                                <span>Tavas prasmes:</span>-->
-<!--                                <span>Tava pieredze: </span>-->
-<!--                                <span>Tava izglītība: </span>-->
-<!--                                <span>Tava atrašanās vieta: </span>-->
-<!--                            </div>-->
-<!--                            <div class="values">-->
-<!--                                <span>{{ profileInfoValue.skills.toString() }}</span>-->
-<!--                                <span>{{ profileInfoValue.experience }} </span>-->
-<!--                                <span>{{ profileInfoValue.education }} </span>-->
-<!--                                <span>{{ profileInfoValue.location }} </span>-->
-<!--                            </div>-->
                             <div class="headings">
                                 <span>Tavas prasmes: <span class="values">{{profileInfoValue.skills.toString()}}</span></span>
                                 <span>Tava pieredze: <span class="values">{{profileInfoValue.experience}}</span></span>
@@ -43,8 +34,7 @@
                             </div>
                         </div>
                         <hr>
-
-
+                        <h3>jūsu pieteikumi</h3>
                     </div>
                     <div class="profile-unset-info" v-if="!isProfileInfoSet">
                         <p>Lai veiktu tālākas darbības lūdzu pievienojiet informāciju par sevi
@@ -61,10 +51,13 @@ import {computed, onMounted, ref, watch} from 'vue';
 import {useStore} from 'vuex';
 import UserInfoModal from "../components/Profile/UserInfoModal.vue";
 import ProgressSpinner from "primevue/progressspinner";
+import Button from "primevue/button";
 import {logout} from "../../api/axios";
+import router from "../router";
 
 const store = useStore();
 const userInfoModal = ref(null);
+const logoutLoading = ref(false)
 
 const user = computed(() => store.state.user);
 const isProfileInfoLoaded = computed(() => !store.state.profile.loadingProfileInfo);
@@ -100,8 +93,10 @@ const profileInfoValue = computed(() => {
 });
 
 const logoutUser = async () => {
-    await store.dispatch('logout');
-    await store.dispatch('setUser', null);
+    logoutLoading.value = true
+    await logout()
+    await router.push('/ielogoties')
+    logoutLoading.value = false
 };
 </script>
 <style lang="scss">
@@ -219,6 +214,7 @@ hr {
     display: flex;
     flex-direction: row;
     gap: 25px;
+    line-break: anywhere;
 
     .headings {
         display: flex;
@@ -238,6 +234,19 @@ hr {
             color: #6b6a6a;
             font-size: 17px;
         }
+    }
+}
+
+.logout-btn {
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 3px !important;
+    //width: 100%;
+    font-weight: bold;
+    //font-size: 15px !important;
+
+    .p-button-label{
+        font-size: 12px !important;
     }
 }
 </style>
