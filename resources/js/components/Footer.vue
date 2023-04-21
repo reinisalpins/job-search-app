@@ -70,7 +70,11 @@ footer {
         gap: 30px;
         border-bottom: 1px solid white;
 
-        @media screen and (max-width: 450px) {
+        //@media screen and (max-width: 450px) {
+        //    padding: 40px 20px;
+        //}
+
+        @media screen and (max-width: 900px){
             padding: 40px 20px;
         }
 
@@ -125,6 +129,9 @@ footer {
             justify-content: space-between;
             align-items: center;
 
+            @media screen and (max-width: 900px){
+                padding: 15px 20px;
+            }
             @media screen and (max-width: 500px) {
                 flex-direction: column;
                 gap: 20px;

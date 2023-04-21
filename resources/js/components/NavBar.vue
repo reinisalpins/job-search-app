@@ -13,26 +13,33 @@
                 <router-link to="/"><img src="/assets/logo-white.png"/></router-link>
             </div>
             <div class="hamburger-icon">
-                <button @click="showSb">
+                <button @click="showSideBar = true">
                     <i class="pi pi-bars" style="font-size: 2rem; color: white"></i>
                 </button>
             </div>
         </div>
-        <div :class="showSideBar ? 'side-nav open' : 'side-nav'">
-            <ul :class="showClassChange">
+        <!--        <div :class="showSideBar ? 'side-nav open' : 'side-nav'">-->
+        <!--            <ul :class="showClassChange">-->
+        <!--                <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">-->
+        <!--                    <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--            <div :class="showClassChange" class="logo-side-nav">-->
+        <!--                <img src="/assets/logo-white.png"/>-->
+        <!--            </div>-->
+        <!--            <div class="close-btn" v-if="showSideBar">-->
+        <!--                <button @click="showSb">-->
+        <!--                    <i class="pi pi-times" style="font-size: 2rem; color: white "></i>-->
+        <!--                </button>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <Sidebar v-model:visible="showSideBar" position="right">
+            <ul class="sidebar-ul">
                 <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
-                    <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>
+                    <router-link style="color: black" :to="item.path">{{ item.label }}</router-link>
                 </li>
             </ul>
-            <div :class="showClassChange" class="logo-side-nav">
-                <img src="/assets/logo-white.png"/>
-            </div>
-            <div class="close-btn" v-if="showSideBar">
-                <button @click="showSb">
-                    <i class="pi pi-times" style="font-size: 2rem; color: white "></i>
-                </button>
-            </div>
-        </div>
+        </Sidebar>
     </nav>
 </template>
 
@@ -40,7 +47,8 @@
 import {computed, ref, watch} from "vue";
 import {useWindowSize} from '@vueuse/core'
 import {useRoute} from "vue-router";
-import { useStore } from 'vuex';
+import {useStore} from 'vuex';
+import Sidebar from "primevue/sidebar";
 
 const {width, height} = useWindowSize()
 const showSideBar = ref(false)
@@ -70,16 +78,16 @@ watch(isLoggedIn, (loggedIn) => {
     ];
 });
 
-const showSb = () => {
-    showSideBar.value = !showSideBar.value
-    if (showSideBar.value) {
-        setTimeout(() => {
-            showClassChange.value = 'show'
-        }, 220)
-    } else {
-        showClassChange.value = 'hide'
-    }
-}
+// const showSb = () => {
+//     showSideBar.value = !showSideBar.value
+//     if (showSideBar.value) {
+//         setTimeout(() => {
+//             showClassChange.value = 'show'
+//         }, 220)
+//     } else {
+//         showClassChange.value = 'hide'
+//     }
+// }
 const isActive = (path) => {
     return route.path === path;
 }
@@ -98,7 +106,17 @@ nav {
         position: fixed;
         width: 100%;
         padding: 15px 50px;
+    }
 
+    @media screen and (max-width: 900px) {
+        position: fixed;
+        width: 100%;
+        padding: 15px 20px;
+    }
+
+
+    @media screen and (max-width: 450px) {
+        padding: 15px 20px;
     }
 
     .nav-container {
@@ -184,100 +202,17 @@ nav {
         }
     }
 
-
-    .side-nav {
-        position: fixed;
-        height: 200vh;
-        right: 0;
-        width: 0;
-        opacity: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #000;
-        transition: .5s;
-
-
-        ul {
-            margin-top: 300px;
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-
-            li {
-                list-style-type: none;
-                color: #fff;
-                padding: 7px;
-
-                &:hover {
-                    text-decoration: underline;
-                    text-underline-offset: 10px;
-                    text-decoration-thickness: 5px;
-                    text-decoration-color: #234E70;
-                }
-            }
-
-
-            .login {
-                background-color: #234E70;
-                border-radius: 4px;
-                border: 2px solid #234E70;
-
-                a {
-                    color: #fff;
-                }
-
-                &:hover {
-                    opacity: .9;
-                }
-            }
-        }
-
-        .logo-side-nav {
-            position: absolute;
-            bottom: 70px;
-            margin-left: 15px;
-            width: 150px;
-
-            img {
-                width: 100%;
-            }
-        }
-
-        .close-btn {
-            position: absolute;
-            right: 50px;
-
-            button {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-
-                &:hover {
-                    opacity: 0.9;
-                }
-
-                svg {
-                    font-size: 40px;
-                    color: #fff;
-                }
-
-            }
+    .p-sidebar-icon {
+        &:focus {
+            box-shadow: none !important;
         }
     }
-}
 
-.open {
-    opacity: 1 !important;
-    width: 250px !important;
-}
-
-.hide {
-    display: none !important;
-}
-
-.show {
-    display: flex !important;
+    .p-link:focus {
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
 }
 
 .active {
@@ -285,6 +220,20 @@ nav {
     text-underline-offset: 10px;
     text-decoration-thickness: 5px;
     text-decoration-color: #234E70;
+}
+
+.sidebar-ul {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    color: black;
+    justify-content: center;
+
+    li {
+        a {
+            font-size: 20px;
+        }
+    }
 }
 </style>
 
