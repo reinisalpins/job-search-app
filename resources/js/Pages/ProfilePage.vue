@@ -6,16 +6,20 @@
             </div>
             <div v-if="isProfileInfoLoaded" class="profile-info-container">
                 <div class="left-side">
-                    <div class="profile-picture">
-                        <img
-                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"/>
-                    </div>
+<!--                    <div class="profile-picture">-->
+<!--                        <img-->
+<!--                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"/>-->
+<!--                    </div>-->
                     <div v-if="!loadingProfileInfo">
                         <UserInfoModal :is-profile-info-set="isProfileInfoSet" ref="userInfoModal"
                                        :profile-info="profileInfoValue"/>
                     </div>
+                    <div class="change-password">
+                        <ChangePasswordModal></ChangePasswordModal>
+                    </div>
                     <div class="logout">
-                        <Button :loading="logoutLoading" label="Izlogoties" @click="logoutUser" class="submit-btn logout-btn"/>
+                        <Button :loading="logoutLoading" label="Izlogoties" @click="logoutUser"
+                                class="submit-btn modal-btn"/>
                     </div>
                 </div>
                 <div class="right-side">
@@ -25,14 +29,7 @@
                     <hr>
                     <div class="profile-info" v-if="isProfileInfoSet">
                         <h3>profila informācija</h3>
-                        <div class="profile-set-info">
-                            <div class="headings">
-                                <span>Tavas prasmes: <span class="values">{{profileInfoValue.skills.toString()}}</span></span>
-                                <span>Tava pieredze: <span class="values">{{profileInfoValue.experience}}</span></span>
-                                <span>Tava izglītība: <span class="values"> {{ profileInfoValue.education }}</span></span>
-                                <span>Tava atrašanās vieta: <span class="values">{{profileInfoValue.location}}</span></span>
-                            </div>
-                        </div>
+                        {{profileInfoValue}}
                         <hr>
                         <h3>jūsu pieteikumi</h3>
                     </div>
@@ -54,6 +51,7 @@ import ProgressSpinner from "primevue/progressspinner";
 import Button from "primevue/button";
 import {logout} from "../../api/axios";
 import router from "../router";
+import ChangePasswordModal from "../components/Profile/ChangePasswordModal.vue";
 
 const store = useStore();
 const userInfoModal = ref(null);
@@ -128,19 +126,24 @@ const logoutUser = async () => {
 .profile-info-container {
     width: 100%;
     display: flex;
-    gap: 100px;
+    gap: 50px;
 
-    @media screen and (max-width: 740px) {
-        gap: 30px;
-    }
+    //@media screen and (max-width: 930px) {
+    //    gap: 30px;
+    //}
     flex-wrap: wrap;
 
     .left-side {
         display: flex;
         flex-direction: column;
         gap: 20px;
-        justify-content: center;
+        //justify-content: center;
         flex: 0 1 auto;
+
+        hr {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
 
         .profile-picture {
             display: flex;
@@ -159,7 +162,6 @@ const logoutUser = async () => {
     .right-side {
         flex: 2 1 auto;
         display: flex;
-        //gap: 25px;
         flex-direction: column;
 
         .profile-heading {
@@ -225,7 +227,7 @@ hr {
         span {
             font-weight: normal;
             color: #a9a8a8;
-            font-size: 17px;
+            font-size: 15px;
         }
 
         .values {
@@ -237,15 +239,13 @@ hr {
     }
 }
 
-.logout-btn {
+.profile-btn {
     margin-top: 10px;
     padding: 15px;
     border-radius: 3px !important;
-    //width: 100%;
     font-weight: bold;
-    //font-size: 15px !important;
 
-    .p-button-label{
+    .p-button-label {
         font-size: 12px !important;
     }
 }

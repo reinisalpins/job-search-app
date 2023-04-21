@@ -31,3 +31,9 @@ Route::group(['prefix' => '/userProfile'], function () {
         Route::patch('/', [UserController::class, 'patchUserProfileInformation']);
     });
 });
+
+Route::group(['prefix' => '/user'], function () {
+    Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+       Route::patch('/changePassword', [UserController::class, 'changeUserPassword']);
+    });
+});

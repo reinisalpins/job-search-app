@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ChangeUserPasswordRequest;
 use App\Http\Requests\User\CreateUserProfileInfoRequest;
 use App\Http\Requests\User\GetUserProfileInfoRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Repositories\User\UserProfileRepository;
+use Illuminate\Http\JsonResponse;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class UserController extends Controller
@@ -37,5 +39,10 @@ class UserController extends Controller
     {
         $userProfile = $this->userProfileRepository->editUserProfile($request->dataTransferObject());
         return new UserProfileResource($userProfile);
+    }
+
+    public function changeUserPassword(ChangeUserPasswordRequest $request): JsonResponse
+    {
+
     }
 }

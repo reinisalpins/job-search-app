@@ -177,7 +177,7 @@ defineExpose({
 }
 
 .modal-btn {
-    margin-top: 10px;
+    //margin-top: 10px;
     padding: 15px;
     border-radius: 3px !important;
     width: 100%;
