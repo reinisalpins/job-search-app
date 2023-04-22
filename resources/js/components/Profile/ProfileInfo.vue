@@ -42,8 +42,6 @@
         <Message severity="info" :closable="false">Profils vēl nav izveidots, to variet izveidot
             <span class="font-bold cursor-pointer hover:underline" @click="showModal">šeit</span>
         </Message>
-
-<!--        <UserInfoModal :visible="showProfileModal" :is-profile-info-set="isUserProfileSet" :profile-info="userProfile"/>-->
     </div>
 </template>
 <script setup>

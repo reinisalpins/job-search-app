@@ -31,6 +31,7 @@
                 </div>
                 <div class="profile-main">
                     <ProfileInfo :user="user" v-if="activeComponent === 1"/>
+                    <UserApplyStats v-if="activeComponent === 3"/>
                     <ChangePassword v-if="activeComponent === 4"/>
                 </div>
             </div>
@@ -45,6 +46,7 @@ import router from "../router";
 import ProfileInfo from "../components/Profile/ProfileInfo.vue";
 import Button from "primevue/button";
 import ChangePassword from "../components/Profile/ChangePassword.vue";
+import UserApplyStats from "../components/Profile/UserApplyStats.vue";
 
 const profileStore = useProfileStore()
 const user = computed(() => profileStore.getUser)
