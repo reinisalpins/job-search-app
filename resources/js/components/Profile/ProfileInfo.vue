@@ -1,8 +1,8 @@
 <template>
-    <Panel class="panel-style" header="Profila informācija" v-if="userProfile">
+    <Panel class="panel-style" header="Profila informācija" v-if="userProfile && !createEditUserProfile">
         <template #icons>
             <button class="p-panel-header-icon p-link mr-2">
-                <span class="pi pi-user-edit text-xl"></span>
+                <span class="pi pi-user-edit text-xl" @click="createEditUserProfile = true"></span>
             </button>
         </template>
         <ul class="profile-info-list">
@@ -14,6 +14,11 @@
             <li>
                 <span>Jūsu izglītība </span>
                 <h3>{{ userProfile.education }}</h3>
+            </li>
+            <Divider/>
+            <li>
+                <span>Jūsu atrašanās vieta </span>
+                <h3>{{ userProfile.location }}</h3>
             </li>
             <Divider/>
             <li>
@@ -38,26 +43,26 @@
             </li>
         </ul>
     </Panel>
-    <div v-if="!userProfile">
+    <div v-if="!userProfile && !createEditUserProfile">
         <Message severity="info" :closable="false">Profils vēl nav izveidots, to variet izveidot
-            <span class="font-bold cursor-pointer hover:underline" @click="showModal">šeit</span>
+            <span class="font-bold cursor-pointer hover:underline" @click="createEditUserProfile = true">šeit</span>
         </Message>
     </div>
+
+    <CreateEditUserProfile :is-profile-info-set="isUserProfileSet" :profile-info="userProfile"
+                           v-if="createEditUserProfile" @close="closeEditProfile"/>
+
 </template>
 <script setup>
 import Panel from "primevue/panel";
 import Divider from "primevue/divider";
-import {computed, onMounted, ref} from "vue";
+import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
 import {useProfileStore} from "../../store/user";
 import Message from "primevue/message";
-import UserInfoModal from "./UserInfoModal.vue";
 import Chip from "primevue/chip";
+import CreateEditUserProfile from "./CreateEditUserProfile.vue";
 
-const showProfileModal = ref(false)
-
-const showModal = () => {
-    showProfileModal.value = true
-}
+const createEditUserProfile = ref(false)
 
 const profileStore = useProfileStore()
 
@@ -65,11 +70,15 @@ const props = defineProps({
     user: Object
 })
 
+const closeEditProfile = () => {
+    createEditUserProfile.value = false;
+}
+
 const userProfile = computed(() => profileStore.getProfileInfo)
 const isUserProfileSet = computed(() => userProfile.value !== null)
 
 onMounted(() => {
-    if ( !profileStore.getProfileInfo ) {
+    if (!profileStore.getProfileInfo) {
         profileStore.fetchUserProfile(props.user.id)
     }
 })
