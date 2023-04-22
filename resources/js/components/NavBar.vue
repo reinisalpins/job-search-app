@@ -18,21 +18,6 @@
                 </button>
             </div>
         </div>
-        <!--        <div :class="showSideBar ? 'side-nav open' : 'side-nav'">-->
-        <!--            <ul :class="showClassChange">-->
-        <!--                <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">-->
-        <!--                    <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>-->
-        <!--                </li>-->
-        <!--            </ul>-->
-        <!--            <div :class="showClassChange" class="logo-side-nav">-->
-        <!--                <img src="/assets/logo-white.png"/>-->
-        <!--            </div>-->
-        <!--            <div class="close-btn" v-if="showSideBar">-->
-        <!--                <button @click="showSb">-->
-        <!--                    <i class="pi pi-times" style="font-size: 2rem; color: white "></i>-->
-        <!--                </button>-->
-        <!--            </div>-->
-        <!--        </div>-->
         <Sidebar v-model:visible="showSideBar" position="right">
             <ul class="sidebar-ul">
                 <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
@@ -47,23 +32,28 @@
 import {computed, ref, watch} from "vue";
 import {useWindowSize} from '@vueuse/core'
 import {useRoute} from "vue-router";
-import {useStore} from 'vuex';
 import Sidebar from "primevue/sidebar";
+import {useProfileStore} from "../store/user";
 
-const {width, height} = useWindowSize()
+const {width} = useWindowSize()
 const showSideBar = ref(false)
-const showClassChange = ref('hide')
 const route = useRoute();
+const profileStore = useProfileStore();
 
-const store = useStore();
-
-const isLoggedIn = computed(() => store.getters.isLoggedIn);
-const user = computed(() => store.state.user);
+const isLoggedIn = computed(() => profileStore.getIsLoggedIn);
+const user = computed(() => profileStore.getUser);
 
 const navItems = ref([
     {path: '/vakances', label: 'Darba vakances'},
     {path: '/prakse', label: 'Prakse'},
-    {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
+    {
+        path: '/pasnodarbinatie',
+        label: 'Pašnodarbinātajiem',
+        subItems: [
+            {path: '/subitem1', label: 'Subitem 1'},
+            {path: '/subitem2', label: 'Subitem 2'},
+        ]
+    },
     {path: '/darba-devejiem', label: 'Darba devējiem'},
     {path: '/ielogoties', label: 'Ielogoties', className: 'login'},
 ]);
@@ -78,16 +68,6 @@ watch(isLoggedIn, (loggedIn) => {
     ];
 });
 
-// const showSb = () => {
-//     showSideBar.value = !showSideBar.value
-//     if (showSideBar.value) {
-//         setTimeout(() => {
-//             showClassChange.value = 'show'
-//         }, 220)
-//     } else {
-//         showClassChange.value = 'hide'
-//     }
-// }
 const isActive = (path) => {
     return route.path === path;
 }

@@ -26,13 +26,12 @@
 </template>
 <script setup>
 import {ref, watchEffect} from 'vue';
-import {getUserData} from "../../api/axios";
 import router from "../router";
-import {useStore} from "vuex";
 import Button from "primevue/button";
 import InlineMessage from "primevue/inlinemessage";
+import {useProfileStore} from "../store/user";
 
-const store = useStore();
+const profileStore = useProfileStore();
 const firstName = ref('');
 const lastName = ref('');
 const phone = ref('');
@@ -42,11 +41,28 @@ const passwordRepeat = ref('');
 const errMessage = ref('');
 const loading = ref(false)
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     if (validateFields()) {
-        registerUser();
+        const userData = {
+            first_name: firstName.value,
+            last_name: lastName.value,
+            phone: phone.value,
+            email: email.value,
+            password: password.value,
+            password_confirmation: passwordRepeat.value,
+        };
+
+        loading.value = true;
+        const result = await profileStore.register(userData);
+
+        if (result === true) {
+            await router.push('/profils');
+        } else {
+            errMessage.value = result;
+        }
+        loading.value = false;
     }
-};
+}
 
 const validateFields = () => {
     if (firstName.value.trim() === '') {
@@ -85,33 +101,8 @@ const validateFields = () => {
     return true;
 };
 
-const registerUser = async () => {
-    try {
-        loading.value = true
-        const response = await axios.post('/api/register', {
-            first_name: firstName.value,
-            last_name: lastName.value,
-            phone: phone.value,
-            email: email.value,
-            password: password.value,
-            password_confirmation: passwordRepeat.value,
-        });
-
-        if (response.status === 200) {
-            localStorage.setItem('auth_token', response.data.token);
-
-            await getUserData()
-            await router.push('/profils');
-            loading.value = false
-        }
-    } catch (error) {
-        loading.value = false
-        errMessage.value = error.response.data.message;
-    }
-};
-
 watchEffect(() => {
-    const isLoggedIn = store.getters.isLoggedIn;
+    const isLoggedIn = profileStore.isLoggedIn;
     const redirect = () => {
         if (isLoggedIn) {
             router.push('/profils');

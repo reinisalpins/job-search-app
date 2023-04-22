@@ -4,13 +4,7 @@ import JobListingsPage from "./Pages/JobListingsPage.vue";
 import LoginPage from "./Pages/LoginPage.vue";
 import RegisterPage from "./Pages/RegisterPage.vue";
 import ProfilePage from "./Pages/ProfilePage.vue";
-import store from "./store";
-import {watchEffect} from "vue";
 import NotFoundPage from "./Pages/NotFoundPage.vue";
-
-watchEffect(() => {
-    const isLoggedIn = store.getters.isLoggedIn;
-});
 
 const routes = [
     {path: '/', component: HomePage},

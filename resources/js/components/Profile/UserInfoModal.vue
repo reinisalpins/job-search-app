@@ -21,14 +21,14 @@
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import {computed, ref} from "vue";
-import {useStore} from "vuex";
+import {useProfileStore} from "../../store/user";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Listbox from "primevue/listbox";
 import {useToast} from "primevue/usetoast";
 
 const toast = useToast();
-const store = useStore();
+const profileStore = useProfileStore();
 const selectedSkills = ref();
 const loading = ref(false)
 
@@ -124,36 +124,36 @@ const showModal = async () => {
 
 const visible = ref(false);
 
-const submitProfile = async () => {
-    const payload = {
-        user_id: store.state.user.id,
-        skills: selectedSkills.value.map(skill => skill.name),
-        experience: selectedExperience.value.name,
-        education: selectedEducation.value.name,
-        location: selectedLocation.value,
-    };
-
-    loading.value = true
-
-    try {
-        if (props.profileInfo) {
-            await store.dispatch('profile/updateProfileInfo', {userId: store.state.user.id, payload});
-        } else {
-            await store.dispatch('profile/createProfileInfo', {userId: store.state.user.id, payload});
-        }
-    } catch (error) {
-        console.error(error);
-        toast.add({severity: 'error', summary: 'Kļūda', detail: 'Nevarēja saglabāt profilu', life: 3000});
-    } finally {
-        toast.add({
-            severity: 'success',
-            summary: 'Profils',
-            detail: 'Profila informācija saglabāta veiksmīgi',
-            life: 3000
-        });
-        loading.value = false
-    }
-};
+// const submitProfile = async () => {
+//     const payload = {
+//         user_id: store.state.user.id,
+//         skills: selectedSkills.value.map(skill => skill.name),
+//         experience: selectedExperience.value.name,
+//         education: selectedEducation.value.name,
+//         location: selectedLocation.value,
+//     };
+//
+//     loading.value = true
+//
+//     try {
+//         if (props.profileInfo) {
+//             await store.dispatch('profile/updateProfileInfo', {userId: store.state.user.id, payload});
+//         } else {
+//             await store.dispatch('profile/createProfileInfo', {userId: store.state.user.id, payload});
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         toast.add({severity: 'error', summary: 'Kļūda', detail: 'Nevarēja saglabāt profilu', life: 3000});
+//     } finally {
+//         toast.add({
+//             severity: 'success',
+//             summary: 'Profils',
+//             detail: 'Profila informācija saglabāta veiksmīgi',
+//             life: 3000
+//         });
+//         loading.value = false
+//     }
+// };
 
 const setSelectedValues = () => {
     if (props.profileInfo) {

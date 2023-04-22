@@ -1,5 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 
+:root {
+    --main-black: #1c1c1c;
+    --main-white: #fff;
+    --error-color: #ff6b6b;
+
+    --text-color: #000 !important;
+    --text-secondary-color: #666 !important;
+    --primary-color: #234E70 !important;
+    --primary-color-text: #fff !important;
+    --font-family: 'Source Sans Pro', sans-serif !important;
+    --inline-spacing: 10px !important;
+    --border-radius: 4px !important;
+    --focus-ring: 0 0 0 3px rgba(35, 78, 112, 0.5) !important;
+    --mask-bg: rgba(0, 0, 0, 0.5) !important;
+    --highlight-bg: #234E70 !important;
+    --highlight-text-color: #fff !important;
+}
+
+
 body {
     margin: 0;
     padding: 0;
@@ -18,10 +37,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    //@media screen and (max-width: 1250px) {
-    //    padding-top: 65px;
-    //}
 }
 
 .container {
@@ -130,21 +145,17 @@ a {
     }
 }
 
+
 .validation-container {
     padding-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .validation-err {
-        color: #ff6b6b;
-        font-size: 1rem;
-        font-weight: bold;
-    }
 }
+
 .submit-btn {
-    background-color: #1c1c1c !important;
-    color: #fff !important;
+    background-color: var(--main-black) !important;
+    color: var(--main-white) !important;
     text-transform: uppercase !important;
     border-radius: 0 !important;
     border: none !important;
@@ -171,3 +182,10 @@ a {
         justify-content: center;
     }
 }
+
+
+
+
+
+
+

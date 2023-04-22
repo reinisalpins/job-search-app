@@ -22,50 +22,42 @@
 </template>
 <script setup>
 import {ref, watchEffect} from 'vue';
-import {useStore} from 'vuex';
+import {useProfileStore} from '../store/user';
 import {useRouter} from 'vue-router';
-import {getUserData} from "../../api/axios";
-import Button from "primevue/button";
-import InlineMessage from "primevue/inlinemessage";
-const store = useStore();
+import Button from 'primevue/button';
+import InlineMessage from 'primevue/inlinemessage';
+
+const profileStore = useProfileStore();
 const router = useRouter();
-const loading = ref(false)
+const loading = ref(false);
 
 const errMessage = ref('');
 const email = ref('');
 const password = ref('');
 
 const login = async () => {
-    try {
-        loading.value = true
-        await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/api/login', {
-            email: email.value,
-            password: password.value,
-        });
+    loading.value = true;
+    const success = await profileStore.login(email.value, password.value);
 
-        localStorage.setItem('auth_token', response.data.token);
-
-        await getUserData()
+    if (success) {
         await router.push('/profils');
-        loading.value = false
-    } catch (error) {
+    } else {
         errMessage.value = 'Nepareizs e-pasts vai/un parole';
-        loading.value = false
     }
+    loading.value = false;
 };
 
 watchEffect(() => {
-    const isLoggedIn = store.getters.isLoggedIn;
+    const isLoggedIn = profileStore.getIsLoggedIn;
     const redirect = () => {
         if (isLoggedIn) {
             router.push('/profils');
         }
-    }
-    redirect()
+    };
+    redirect();
 });
-
 </script>
+
 
 <style lang="scss">
 
