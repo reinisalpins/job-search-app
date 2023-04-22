@@ -1,5 +1,4 @@
 <template>
-    <button @click="showModal" class="submit-btn modal-btn">{{ buttonLabel }}</button>
     <Dialog v-model:visible="visible" :draggable="false" modal header="Profila informācija" :style="{ width: '50vw' }"
             :breakpoints="{ '960px': '75vw', '641px': '90vw' }">
         <div class="input-form-container">
@@ -10,10 +9,14 @@
             <Listbox v-model="selectedExperience" :options="experience" optionLabel="name"/>
             <h3 style="padding-top: 20px">Tava izglītība: </h3>
             <Listbox v-model="selectedEducation" :options="education" optionLabel="name"/>
+            <h3 style="padding-top: 20px">Tavas valodu prasmes: </h3>
+            <MultiSelect v-model="selectedLanguages" name="languages" :options="languages" filter optionLabel="name"
+                         placeholder="Tavas valodu prasmes"
+                         :maxSelectedLabels="3" class="w-full md:w-20rem"/>
             <h3 style="padding-top: 20px">Tava atrašanās vieta: </h3>
             <InputText type="text" v-model="selectedLocation" placeholder="Atrašanās vieta"/>
             <span></span>
-            <Button :loading="loading" label="Saglabāt" class="submit-btn modal-btn" @click="submitProfile"/>
+            <Button :loading="loading" label="Saglabāt" @click="submitProfile"/>
         </div>
     </Dialog>
 </template>
@@ -37,12 +40,10 @@ const props = defineProps({
         type: Boolean,
         required: true
     },
-    profileInfo: Object
+    profileInfo: Object,
+    visible: Boolean
 })
-
-const buttonLabel = computed(() => {
-    return props.isProfileInfoSet ? 'Labot profila informāciju' : 'Iestatīt profila informāciju';
-});
+const user = computed(() => profileStore.getUser)
 
 const selectedLocation = ref()
 const itSkills = ref([
@@ -115,45 +116,49 @@ const education = ref([
     {name: 'Augstākā izglītība'},
 ]);
 
-const showModal = async () => {
-    visible.value = true;
-    if (props.isProfileInfoSet) {
-        setSelectedValues();
+const selectedLanguages = ref()
+const languages = ref([
+    {name: 'Angļu'},
+    {name: 'Latviešu'},
+    {name: 'Spāņu'},
+    {name: 'Franču'},
+    {name: 'Vācu'},
+    {name: 'Ķīniešu'},
+    {name: 'Japāņu'},
+    {name: 'Korejiešu'},
+    {name: 'Itāļu'},
+    {name: 'Portugāļu'},
+    {name: 'Krievu'},
+    {name: 'Arābu'},
+    {name: 'Hindi'},
+])
+
+const submitProfile = async () => {
+    const payload = {
+        user_id: user.value.id,
+        skills: selectedSkills.value.map(skill => skill.name),
+        experience: selectedExperience.value.name,
+        education: selectedEducation.value.name,
+        languages: selectedLanguages.value.map(language => language.name),
+        location: selectedLocation.value,
+    };
+
+    loading.value = true
+
+    if (props.profileInfo) {
+        await profileStore.updateUserProfile(user.value.id, payload)
+    } else {
+        await profileStore.createUserProfile(user.value.id, payload)
     }
-}
 
-const visible = ref(false);
-
-// const submitProfile = async () => {
-//     const payload = {
-//         user_id: store.state.user.id,
-//         skills: selectedSkills.value.map(skill => skill.name),
-//         experience: selectedExperience.value.name,
-//         education: selectedEducation.value.name,
-//         location: selectedLocation.value,
-//     };
-//
-//     loading.value = true
-//
-//     try {
-//         if (props.profileInfo) {
-//             await store.dispatch('profile/updateProfileInfo', {userId: store.state.user.id, payload});
-//         } else {
-//             await store.dispatch('profile/createProfileInfo', {userId: store.state.user.id, payload});
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         toast.add({severity: 'error', summary: 'Kļūda', detail: 'Nevarēja saglabāt profilu', life: 3000});
-//     } finally {
-//         toast.add({
-//             severity: 'success',
-//             summary: 'Profils',
-//             detail: 'Profila informācija saglabāta veiksmīgi',
-//             life: 3000
-//         });
-//         loading.value = false
-//     }
-// };
+    toast.add({
+        severity: 'success',
+        summary: 'Profils',
+        detail: 'Profila informācija saglabāta veiksmīgi',
+        life: 3000
+    });
+    loading.value = false
+};
 
 const setSelectedValues = () => {
     if (props.profileInfo) {
@@ -164,9 +169,6 @@ const setSelectedValues = () => {
     }
 };
 
-defineExpose({
-    showModal
-});
 </script>
 
 <style lang="scss">

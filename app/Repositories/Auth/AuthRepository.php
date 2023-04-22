@@ -16,17 +16,16 @@ class AuthRepository
     {
     }
 
-    public function register(RegisterDataTransferObject $dataTransferObject)
+    public function register(RegisterDataTransferObject $dataTransferObject): string
     {
-        $payload = [
-            'first_name' => $dataTransferObject->first_name,
-            'last_name' => $dataTransferObject->last_name,
-            'phone' => $dataTransferObject->phone,
-            'email' => $dataTransferObject->email,
-            'password' => Hash::make($dataTransferObject->password),
-        ];
+        $user = new User();
+        $user->setFirstName($dataTransferObject->first_name);
+        $user->setLastName($dataTransferObject->last_name);
+        $user->setPhone($dataTransferObject->phone);
+        $user->setEmail($dataTransferObject->email);
+        $user->setPassword(Hash::make($dataTransferObject->password));
 
-        $user = User::create($payload);
+        $user->save();
 
         return $user->createToken('my-app-token')->plainTextToken;
     }

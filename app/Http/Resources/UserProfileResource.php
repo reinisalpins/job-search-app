@@ -26,6 +26,7 @@ class UserProfileResource extends JsonResource
             'skills' => $this->resource->getSkills(),
             'experience' => $this->resource->getExperience(),
             'education' => $this->resource->getEducation(),
+            'languages' => $this->resource->getLanguages(),
             'location' => $this->resource->getLocation(),
         ];
     }
