@@ -41,8 +41,11 @@ class UserController extends Controller
         return new UserProfileResource($userProfile);
     }
 
+    /**
+     * @throws UnknownProperties
+     */
     public function changeUserPassword(ChangeUserPasswordRequest $request): JsonResponse
     {
-
+        return $this->userProfileRepository->changeUserPassword($request->dataTransferObject());
     }
 }

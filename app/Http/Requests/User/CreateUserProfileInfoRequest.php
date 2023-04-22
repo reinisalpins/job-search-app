@@ -19,11 +19,12 @@ class CreateUserProfileInfoRequest extends FormRequest
     {
         return [
             'user_id' => 'required|integer|exists:users,id|',
-            'skills' => 'nullable|array',
-            'skills.*' => 'string',
-            'experience' => 'nullable|string',
-            'education' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
+            'skills' => 'required|array',
+            'skills.*' => 'required|string',
+            'experience' => 'required|string',
+            'education' => 'required|string',
+            'languages' => 'required|array',
+            'location' => 'required|string|max:255',
         ];
     }
 

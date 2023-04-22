@@ -12,6 +12,7 @@ class CreateUserProfileData extends DataTransferObject
     public ?string $experience;
     public ?string $education;
     public ?string $location;
+    public ?array $languages;
 
     public static function fromRequest(CreateUserProfileInfoRequest $request): self
     {
@@ -20,6 +21,7 @@ class CreateUserProfileData extends DataTransferObject
             'skills' => $request->input('skills'),
             'experience' => $request->input('experience'),
             'education' => $request->input('education'),
+            'languages' => $request->input('languages'),
             'location' => $request->input('location'),
         ]);
     }

@@ -13,6 +13,7 @@ export const useProfileStore = defineStore({
         isUserLoaded: false,
         loadingProfileInfo: false,
         profileInfo: null,
+        loadingChangePassword: false
     }),
 
     getters: {
@@ -21,6 +22,7 @@ export const useProfileStore = defineStore({
         getIsUserLoaded: (state) => state.isUserLoaded,
         getIsLoadingProfileInfo: (state) => state.loadingProfileInfo,
         getProfileInfo: (state) => state.profileInfo,
+        getLoadingChangePassword: (state) => state.loadingChangePassword
     },
 
     actions: {
@@ -98,6 +100,7 @@ export const useProfileStore = defineStore({
         },
 
         async fetchUserProfile(userId) {
+            this.loadingProfileInfo = true
             try {
                 const response = await axios.get(`/api/userProfile/${userId}`);
                 this.profileInfo = response.data.data
@@ -123,6 +126,18 @@ export const useProfileStore = defineStore({
                 this.profileInfo = response.data.data
             } catch (error) {
                 console.error("Error creating profile info:", error);
+            }
+        },
+
+        async changeUserPassword(userId, password) {
+            this.loadingChangePassword = true
+            try {
+                const response = await axios.patch(`/api/user/${userId}/changePassword`, password)
+                return 200
+            } catch (error) {
+                return 400
+            } finally {
+                this.loadingChangePassword = false
             }
         }
     },

@@ -16,9 +16,10 @@ class UserProfile extends Model
     public const SKILLS = 'skills';
     public const EXPERIENCE = 'experience';
     public const EDUCATION = 'education';
+    public const LANGUAGES = 'languages';
     public const LOCATION = 'location';
 
-    protected $fillable = [self::USER_ID, self::SKILLS, self::EXPERIENCE, self::EDUCATION, self::LOCATION];
+    protected $fillable = [self::USER_ID, self::SKILLS, self::EXPERIENCE, self::EDUCATION, self::LOCATION, self::LANGUAGES];
 
     protected $casts = [
         self::USER_ID => 'integer',
@@ -26,6 +27,7 @@ class UserProfile extends Model
         self::EXPERIENCE => 'string',
         self::EDUCATION => 'string',
         self::LOCATION => 'string',
+        self::LANGUAGES => 'array'
     ];
 
     public function getId(): int
@@ -86,6 +88,16 @@ class UserProfile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getLanguages(): ?array
+    {
+        return $this->{self::LANGUAGES};
+    }
+
+    public function setLanguages(?array $languages): void
+    {
+        $this->{self::LANGUAGES} = $languages;
     }
 }
 

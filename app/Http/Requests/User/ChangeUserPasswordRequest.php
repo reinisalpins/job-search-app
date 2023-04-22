@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\User;
 
+use App\DataTransferObjects\User\ChangeUserPasswordData;
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class ChangeUserPasswordRequest extends FormRequest
 {
@@ -25,5 +27,18 @@ class ChangeUserPasswordRequest extends FormRequest
                 'confirmed',
             ],
         ];
+    }
+
+    public function getUserId(): int
+    {
+        return $this->route('userId');
+    }
+
+    /**
+     * @throws UnknownProperties
+     */
+    public function dataTransferObject(): ChangeUserPasswordData
+    {
+        return ChangeUserPasswordData::fromRequest($this);
     }
 }

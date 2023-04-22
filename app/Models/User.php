@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\User\UserProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -14,34 +13,26 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    public const ID = 'id';
+    public const FIRST_NAME = 'first_name';
+    public const LAST_NAME = 'last_name';
+    public const PHONE = 'phone';
+    public const EMAIL = 'email';
+    public const PASSWORD = 'password';
+
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'phone',
-        'email',
-        'password',
+        self::FIRST_NAME,
+        self::LAST_NAME,
+        self::PHONE,
+        self::EMAIL,
+        self::PASSWORD,
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -49,5 +40,60 @@ class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class, 'user_id');
+    }
+
+    public function getId(): int
+    {
+        return $this->{self::ID};
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->{self::FIRST_NAME};
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->{self::FIRST_NAME} = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->{self::LAST_NAME};
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->{self::LAST_NAME} = $lastName;
+    }
+
+    public function getPhone(): string
+    {
+        return $this->{self::PHONE};
+    }
+
+    public function setPhone(string $phone): void
+    {
+        $this->{self::PHONE} = $phone;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->{self::EMAIL};
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->{self::EMAIL} = $email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->{self::PASSWORD};
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->{self::PASSWORD} = $password;
     }
 }
