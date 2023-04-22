@@ -1,51 +1,72 @@
 <template>
-    <Dialog v-model:visible="visible" :draggable="false" modal header="Profila informācija" :style="{ width: '50vw' }"
-            :breakpoints="{ '960px': '75vw', '641px': '90vw' }">
-        <div class="input-form-container">
+    <Panel class="panel-style" header="Iestatīt/labot profila informāciju">
+        <div class="input-form-container" v-if="!successEdited">
             <MultiSelect v-model="selectedSkills" name="skills" :options="itSkills" filter optionLabel="name"
                          placeholder="Tavas prasmes"
                          :maxSelectedLabels="3" class="w-full md:w-20rem"/>
-            <h3 style="padding-top: 20px">Tava pieredze: </h3>
+            <Divider/>
+            <h3 class="pb-2">Tava pieredze: </h3>
             <Listbox v-model="selectedExperience" :options="experience" optionLabel="name"/>
-            <h3 style="padding-top: 20px">Tava izglītība: </h3>
+            <Divider/>
+            <h3 class="pb-2">Tava izglītība: </h3>
             <Listbox v-model="selectedEducation" :options="education" optionLabel="name"/>
-            <h3 style="padding-top: 20px">Tavas valodu prasmes: </h3>
+            <Divider/>
             <MultiSelect v-model="selectedLanguages" name="languages" :options="languages" filter optionLabel="name"
                          placeholder="Tavas valodu prasmes"
                          :maxSelectedLabels="3" class="w-full md:w-20rem"/>
-            <h3 style="padding-top: 20px">Tava atrašanās vieta: </h3>
+            <Divider/>
             <InputText type="text" v-model="selectedLocation" placeholder="Atrašanās vieta"/>
-            <span></span>
-            <Button :loading="loading" label="Saglabāt" @click="submitProfile"/>
+            <Divider/>
+            <div class="flex flex-wrap gap-4">
+                <Button type="submit" :loading="loading" @click="submitUserProfile" label="Saglabāt"/>
+                <InlineMessage v-if="errorMessage">{{ errorMessage }}</InlineMessage>
+            </div>
         </div>
-    </Dialog>
+
+        <div v-if="successEdited">
+            <Message severity="success" :closable="false">Profila informācija saglabāta veiksmīgi, apskatīt <span
+                class="cursor-pointer font-bold hover:underline" @click="closeForm">šeit</span></Message>
+        </div>
+    </Panel>
 </template>
+
 <script setup>
-import Dialog from 'primevue/dialog';
-import Button from 'primevue/button';
-import {computed, ref} from "vue";
+import Panel from "primevue/panel";
 import {useProfileStore} from "../../store/user";
 import InputText from "primevue/inputtext";
-import MultiSelect from "primevue/multiselect";
 import Listbox from "primevue/listbox";
-import {useToast} from "primevue/usetoast";
+import MultiSelect from "primevue/multiselect";
+import Button from "primevue/button";
+import {computed, onMounted, ref} from "vue";
+import Divider from "primevue/divider";
+import InlineMessage from "primevue/inlinemessage";
+import Message from "primevue/message";
 
-const toast = useToast();
-const profileStore = useProfileStore();
-const selectedSkills = ref();
-const loading = ref(false)
+const profileStore = useProfileStore()
+const user = computed(() => profileStore.getUser)
+const successEdited = ref(false)
 
 const props = defineProps({
-    isProfileInfoSet: {
-        type: Boolean,
-        required: true
-    },
     profileInfo: Object,
-    visible: Boolean
+    isProfileInfoSet: Boolean
 })
-const user = computed(() => profileStore.getUser)
+
+const loading = ref(false)
 
 const selectedLocation = ref()
+const errorMessage = ref()
+
+onMounted(() => {
+    setSelectedValues()
+})
+
+const emits = defineEmits(['close']);
+
+const closeForm = () => {
+    emits('close');
+};
+
+const selectedSkills = ref()
 const itSkills = ref([
     {name: 'Java'},
     {name: 'Python'},
@@ -133,56 +154,49 @@ const languages = ref([
     {name: 'Hindi'},
 ])
 
-const submitProfile = async () => {
-    const payload = {
-        user_id: user.value.id,
-        skills: selectedSkills.value.map(skill => skill.name),
-        experience: selectedExperience.value.name,
-        education: selectedEducation.value.name,
-        languages: selectedLanguages.value.map(language => language.name),
-        location: selectedLocation.value,
-    };
-
-    loading.value = true
-
-    if (props.profileInfo) {
-        await profileStore.updateUserProfile(user.value.id, payload)
-    } else {
-        await profileStore.createUserProfile(user.value.id, payload)
-    }
-
-    toast.add({
-        severity: 'success',
-        summary: 'Profils',
-        detail: 'Profila informācija saglabāta veiksmīgi',
-        life: 3000
-    });
-    loading.value = false
-};
-
 const setSelectedValues = () => {
     if (props.profileInfo) {
         selectedSkills.value = itSkills.value.filter(skill => props.profileInfo.skills.includes(skill.name));
         selectedExperience.value = experience.value.find(exp => exp.name === props.profileInfo.experience);
         selectedEducation.value = education.value.find(edu => edu.name === props.profileInfo.education);
+        selectedLanguages.value = languages.value.filter(language => props.profileInfo.languages.includes(language.name))
         selectedLocation.value = props.profileInfo.location;
     }
-};
+}
+
+const submitUserProfile = async () => {
+    loading.value = true
+    const payload = {
+        user_id: user.value?.id,
+        skills: selectedSkills.value?.map(skill => skill.name) || [],
+        experience: selectedExperience.value?.name || "",
+        education: selectedEducation.value?.name || "",
+        languages: selectedLanguages.value?.map(language => language.name) || [],
+        location: selectedLocation.value || "",
+    };
+
+    const isPayloadEmpty = Object.values(payload).some(value => {
+        if (Array.isArray(value)) {
+            return value.length === 0;
+        }
+        return !value;
+    });
+
+    if (!isPayloadEmpty) {
+        if (props.isProfileInfoSet) {
+            await profileStore.updateUserProfile(user.value.id, payload)
+        } else {
+            await profileStore.createUserProfile(user.value.id, payload)
+        }
+        successEdited.value = true
+    } else {
+        errorMessage.value = 'Lūdzu aizpildiet visus laukus'
+    }
+
+    loading.value = false
+}
+
 
 </script>
 
-<style lang="scss">
-.input-form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.modal-btn {
-    //margin-top: 10px;
-    padding: 15px;
-    border-radius: 3px !important;
-    width: 100%;
-    font-weight: bold;
-}
-</style>
+<style lang="scss"></style>
