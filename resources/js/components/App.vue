@@ -5,28 +5,27 @@
             <NavBar/>
             <router-view></router-view>
         </div>
+        <ScrollTop />
         <Footer/>
     </div>
 </template>
 
-<script>
+<script setup>
 import Footer from "./Footer.vue";
 import NavBar from "./NavBar.vue";
 import 'primeicons/primeicons.css';
-import {getUserData} from "../../api/axios";
+import {useProfileStore} from "../store/user";
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 import "primevue/resources/primevue.min.css";
+import "primeflex/primeflex.css";
+import {onMounted} from "vue";
+import ScrollTop from "primevue/scrolltop";
 
-export default {
-    name: 'App',
-    components: {
-        Footer,
-        NavBar,
-    },
-    async created() {
-        await getUserData();
-    },
-};
+const profileStore = useProfileStore();
+
+onMounted(async () => {
+    await profileStore.fetchUser();
+});
 </script>
 <style lang="scss">
 .main {
