@@ -10,11 +10,11 @@ import Employers from "./Pages/Employers.vue";
 const routes = [
     {path: '/', component: HomePage},
     {path: '/vakances', component: JobListingsPage},
-    {path: '/ielogoties', component: LoginPage},
+    {path: '/ielogoties', component: LoginPage, meta: {guestOnly: true}},
     {path: '/darba-devejiem', component: Employers},
-    {path: '/registreties', component: RegisterPage},
-    {path: '/profils', component: ProfilePage},
-    {path: '/profils/:section', component: ProfilePage},
+    {path: '/registreties', component: RegisterPage, meta: {guestOnly: true}},
+    {path: '/profils', component: ProfilePage, meta: {requiresAuth: true}},
+    {path: '/profils/:section', component: ProfilePage, meta: {requiresAuth: true}},
     {path: '/:pathMatch(.*)*', component: NotFoundPage},
 ]
 

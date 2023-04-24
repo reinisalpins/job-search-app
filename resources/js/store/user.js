@@ -94,6 +94,7 @@ export const useProfileStore = defineStore({
                 await authAxios.post('/logout');
                 localStorage.removeItem('auth_token');
                 this.user = null
+                this.profileInfo = null
             } catch (error) {
                 console.error('Error logging out:', error);
             }

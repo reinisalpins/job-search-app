@@ -192,7 +192,6 @@ const submitUserProfile = async () => {
     } else {
         errorMessage.value = 'Lūdzu aizpildiet visus laukus'
     }
-
     loading.value = false
 }
 

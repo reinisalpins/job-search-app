@@ -245,6 +245,7 @@ const cardsData = [
             padding: 20px 20px 35px;
             max-width: 400px;
             width: 100%;
+            border-radius: 5px;
 
             h1 {
                 font-size: 30px;

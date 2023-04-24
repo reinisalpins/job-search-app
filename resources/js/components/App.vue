@@ -15,8 +15,8 @@ import Footer from "./Footer.vue";
 import NavBar from "./NavBar.vue";
 import 'primeicons/primeicons.css';
 import {useProfileStore} from "../store/user";
-import "primevue/resources/themes/lara-light-indigo/theme.css";
 import "primevue/resources/primevue.min.css";
+import '../../css/theme.css'
 import "primeflex/primeflex.css";
 import {onMounted} from "vue";
 import ScrollTop from "primevue/scrolltop";

@@ -129,13 +129,13 @@ const logout = async () => {
                     border-bottom: 1px solid #e1e6eb;
 
                     &:hover {
-                        background-color: #eceeed;
+                        background-color: #f8f9fa;
                         cursor: pointer;
                     }
                 }
 
                 .active {
-                    background-color: #eceeed;
+                    background-color: #f8f9fa;
                     text-decoration: none !important;
                     font-weight: bold;
                 }
@@ -169,7 +169,7 @@ const logout = async () => {
     color: black;
     border-radius: 0px !important;
     transition: none !important;
-
+    
     &:focus {
         border: none !important;
         box-shadow: none !important;
