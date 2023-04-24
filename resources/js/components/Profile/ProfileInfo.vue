@@ -23,7 +23,7 @@
             <Divider/>
             <li>
                 <span>Jūsu prasmes </span>
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-wrap">
                     <span v-for="skill in userProfile.skills">
                     <Chip :label="skill"/>
                 </span>
