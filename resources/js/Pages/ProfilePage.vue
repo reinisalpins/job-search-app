@@ -39,7 +39,7 @@
     </div>
 </template>
 <script setup>
-import {computed, ref, watch, onBeforeMount} from 'vue';
+import {computed, ref, watch, onBeforeMount, onMounted} from 'vue';
 import {useProfileStore} from "../store/user";
 import ProgressSpinner from "primevue/progressspinner";
 import router from "../router";
@@ -74,7 +74,6 @@ const setActiveComponentByRoute = () => {
     }
 }
 
-
 watch(router.currentRoute, () => {
     setActiveComponentByRoute()
 })
@@ -86,7 +85,7 @@ onBeforeMount(() => {
 const logout = async () => {
     logoutLoading.value = true
     await profileStore.logout()
-    await router.push('/ielogoties')
+    await router.push('/')
     logoutLoading.value = false
 }
 
@@ -162,14 +161,14 @@ const logout = async () => {
 .logout-btn {
     border: none !important;
     text-align: left !important;
-    background-color: transparent;
+    background-color: transparent !important;
     padding: 15px !important;
     width: 100% !important;
     display: block !important;
-    color: black;
+    color: black !important;
     border-radius: 0px !important;
     transition: none !important;
-    
+
     &:focus {
         border: none !important;
         box-shadow: none !important;

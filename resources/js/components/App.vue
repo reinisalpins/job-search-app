@@ -7,6 +7,7 @@
         </div>
         <ScrollTop />
         <Footer/>
+        <AuthDialog/>
     </div>
 </template>
 
@@ -20,6 +21,7 @@ import '../../css/theme.css'
 import "primeflex/primeflex.css";
 import {onMounted} from "vue";
 import ScrollTop from "primevue/scrolltop";
+import AuthDialog from "./AuthDialog.vue";
 
 const profileStore = useProfileStore();
 

@@ -82,4 +82,10 @@ const changePassword = async () => {
 .p-fieldset-legend {
     margin-left: 20px !important;
 }
+
+.p-password {
+    svg {
+        right: 15px !important;
+    }
+}
 </style>

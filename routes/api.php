@@ -24,16 +24,21 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::group(['prefix' => '/userProfile'], function () {
-    Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-        Route::get('/', [UserController::class, 'getUserProfileInformation']);
-        Route::post('/', [UserController::class, 'setUserProfileInformation']);
-        Route::patch('/', [UserController::class, 'patchUserProfileInformation']);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['prefix' => '/user'], function () {
+        Route::group(['prefix' => '/profile'], function () {
+            Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+                Route::get('/', [UserController::class, 'getUserProfileInformation']);
+                Route::post('/', [UserController::class, 'setUserProfileInformation']);
+                Route::patch('/', [UserController::class, 'patchUserProfileInformation']);
+            });
+        });
     });
 });
 
+
 Route::group(['prefix' => '/user'], function () {
     Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-       Route::patch('/changePassword', [UserController::class, 'changeUserPassword']);
+        Route::patch('/changePassword', [UserController::class, 'changeUserPassword']);
     });
 });

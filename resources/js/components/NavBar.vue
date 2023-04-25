@@ -4,7 +4,12 @@
             <router-link style="color: white" to="/"><img src="/assets/logo-white.png"/></router-link>
             <ul>
                 <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
-                    <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>
+                    <template v-if="item.onClick">
+                        <a href="javascript:void(0)" style="color: white" @click="item.onClick">{{ item.label }}</a>
+                    </template>
+                    <template v-else>
+                        <router-link style="color: white" :to="item.path">{{ item.label }}</router-link>
+                    </template>
                 </li>
             </ul>
         </div>
@@ -21,7 +26,12 @@
         <Sidebar v-model:visible="showSideBar" position="right">
             <ul class="sidebar-ul">
                 <li v-for="(item, index) in navItems" :key="index" :class="{ active: isActive(item.path) }">
-                    <router-link style="color: black" :to="item.path">{{ item.label }}</router-link>
+                    <template v-if="item.onClick">
+                        <a href="javascript:void(0)" style="color: black" @click="item.onClick">{{ item.label }}</a>
+                    </template>
+                    <template v-else>
+                        <router-link style="color: black" :to="item.path">{{ item.label }}</router-link>
+                    </template>
                 </li>
             </ul>
         </Sidebar>
@@ -34,11 +44,14 @@ import {useWindowSize} from '@vueuse/core'
 import {useRoute} from "vue-router";
 import Sidebar from "primevue/sidebar";
 import {useProfileStore} from "../store/user";
+import {useIndex} from "../store/indexPinia";
+import router from "../router";
 
 const {width} = useWindowSize()
 const showSideBar = ref(false)
 const route = useRoute();
 const profileStore = useProfileStore();
+const indexStore = useIndex()
 
 const isLoggedIn = computed(() => profileStore.getIsLoggedIn);
 const user = computed(() => profileStore.getUser);
@@ -46,16 +59,14 @@ const user = computed(() => profileStore.getUser);
 const navItems = ref([
     {path: '/vakances', label: 'Darba vakances'},
     {path: '/prakse', label: 'Prakse'},
-    {
-        path: '/pasnodarbinatie',
-        label: 'Pašnodarbinātajiem',
-        subItems: [
-            {path: '/subitem1', label: 'Subitem 1'},
-            {path: '/subitem2', label: 'Subitem 2'},
-        ]
-    },
+    // {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem',},
     {path: '/darba-devejiem', label: 'Darba devējiem'},
-    {path: '/ielogoties', label: 'Ielogoties', className: 'login'},
+    {
+        path: '/ielogoties', label: 'Ielogoties', className: 'login',
+        onClick: () => {
+            indexStore.showAuthDialog()
+        },
+    },
 ]);
 
 watch(isLoggedIn, (loggedIn) => {
@@ -64,7 +75,17 @@ watch(isLoggedIn, (loggedIn) => {
         {path: '/prakse', label: 'Prakse'},
         // {path: '/pasnodarbinatie', label: 'Pašnodarbinātajiem'},
         {path: '/darba-devejiem', label: 'Darba devējiem'},
-        {path: loggedIn ? '/profils' : '/ielogoties', label: loggedIn ? 'Profils' : 'Ielogoties', className: 'login'},
+        {
+            label: loggedIn ? 'Profils' : 'Ielogoties',
+            className: 'login',
+            onClick: () => {
+                if (!loggedIn) {
+                    indexStore.showAuthDialog()
+                } else {
+                    router.push('/profils')
+                }
+            },
+        },
     ];
 });
 
