@@ -44,7 +44,7 @@
         </ul>
     </Panel>
     <div v-if="!userProfile && !createEditUserProfile">
-        <Message severity="info" :closable="false">Profils vēl nav izveidots, to variet izveidot
+        <Message severity="info" :closable="false">Profila informācija vēl nav izveidota, to variet izveidot
             <span class="font-bold cursor-pointer hover:underline" @click="createEditUserProfile = true">šeit</span>
         </Message>
     </div>
@@ -78,9 +78,7 @@ const userProfile = computed(() => profileStore.getProfileInfo)
 const isUserProfileSet = computed(() => userProfile.value !== null)
 
 onMounted(() => {
-    if (!profileStore.getProfileInfo) {
-        profileStore.fetchUserProfile(props.user.id)
-    }
+    profileStore.fetchUserProfile(props.user.id)
 })
 
 </script>

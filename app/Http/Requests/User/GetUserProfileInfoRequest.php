@@ -16,10 +16,8 @@ class GetUserProfileInfoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $userId = $this->route('userId');
-        $profile = UserProfile::where('user_id', $userId)->first();
-
-        return $profile !== null;
+        $userId = $this->getUserId();
+        return UserProfile::where('user_id', $userId)->exists();
     }
 
     public function rules(): array
