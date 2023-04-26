@@ -24,6 +24,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::group(['prefix' => '/employer'], function () {
+   Route::post('/register', [AuthController::class, 'employerRegister']);
+   Route::post('/login', [AuthController::class, 'employerLogin']);
+});
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => '/user'], function () {
         Route::group(['prefix' => '/profile'], function () {
@@ -39,6 +44,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::group(['prefix' => '/user'], function () {
     Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-        Route::patch('/changePassword', [UserController::class, 'changeUserPassword']);
+        Route::patch('/password', [UserController::class, 'changeUserPassword']);
     });
 });

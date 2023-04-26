@@ -6,19 +6,20 @@
            @click="indexStore.makeRegisterInactive">Ielogojieties
             šeit</a>
     </div>
+    <div class="profile-type flex gap-3 flex-row justify-content-center flex-wrap mt-2 mb-3">
+        <Card :class="`w-15rem h-4rem ${selectedUserType === 'job_seeker' ? 'bg-blue-50' : ''} cursor-pointer`"
+              @click="selectedUserType = 'job_seeker'">
+            <template #subtitle>Esmu darba meklētājs</template>
+        </Card>
+        <Card :class="`w-15rem h-4rem ${selectedUserType === 'employer' ? 'bg-blue-50' : ''} cursor-pointer`"
+              @click="selectedUserType = 'employer'">
+            <template #subtitle>Esmu darba devējs</template>
+        </Card>
+    </div>
 
     <div>
         <label for="email1" class="block text-900 font-medium mb-2">E-Pasts</label>
         <InputText id="email1" v-model="email" type="text" class="w-full mb-3"/>
-
-        <label for="firstName" class="block text-900 font-medium mb-2">Vārds</label>
-        <InputText id="firstName" v-model="firstName" type="text" class="w-full mb-3"/>
-
-        <label for="lastName" class="block text-900 font-medium mb-2">Uzvārds</label>
-        <InputText id="lastName" v-model="lastName" type="text" class="w-full mb-3"/>
-
-        <label for="phone" class="block text-900 font-medium mb-2">Tālrunis</label>
-        <InputText id="phone" v-model="phone" type="text" class="w-full mb-3"/>
 
         <label for="password1" class="block text-900 font-medium mb-2">Parole</label>
         <InputText id="password1" v-model="password" type="password" class="w-full mb-3"/>
@@ -41,27 +42,24 @@ import InlineMessage from "primevue/inlinemessage";
 import {useProfileStore} from "../../store/user";
 import InputText from "primevue/inputtext";
 import {useIndex} from "../../store/indexPinia";
+import Card from "primevue/card";
 
 const profileStore = useProfileStore();
-const firstName = ref('');
-const lastName = ref('');
-const phone = ref('');
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
 const errMessage = ref('');
 const loading = ref(false)
 const indexStore = useIndex()
+const selectedUserType = ref('job_seeker');
 
 const handleSubmit = async () => {
     if (validateFields()) {
         const userData = {
-            first_name: firstName.value,
-            last_name: lastName.value,
-            phone: phone.value,
             email: email.value,
             password: password.value,
             password_confirmation: passwordRepeat.value,
+            user_type: selectedUserType.value
         };
 
         loading.value = true;
@@ -78,23 +76,9 @@ const handleSubmit = async () => {
 }
 
 const validateFields = () => {
-    if (firstName.value.trim() === '') {
-        errMessage.value = 'Ievadiet savu vārdu'
-        return false;
-    }
-
-    if (lastName.value.trim() === '') {
-        errMessage.value = 'Ievadiet savu uzvārdu'
-        return false;
-    }
-
-    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-    if (!phoneRegex.test(phone.value.trim())) {
-        errMessage.value = 'Pārbaudiet savu tālruni'
-        return false;
-    }
 
     const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
     if (!emailRegex.test(email.value.trim())) {
         errMessage.value = 'Pārbaudiet savu e-pasta adresi'
         return false;
@@ -109,6 +93,12 @@ const validateFields = () => {
         errMessage.value = 'Paroles nesakrīt'
         return false;
     }
+
+    if (selectedUserType.value !== 'job_seeker' && selectedUserType.value !== 'employer') {
+        errMessage.value = 'Izvēlieties lietotāja veidu';
+        return false;
+    }
+
 
     errMessage.value = ''
     return true;

@@ -3,6 +3,16 @@
         <div class="text-900 text-3xl font-medium mb-3">Sveicināti atpakaļ</div>
         <span class="text-600 font-medium line-height-3">Nēesat reģistrēts?</span>
         <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" @click="indexStore.makeRegisterActive">Izveidojiet profilu šeit</a>
+
+<!--        <div class="profile-type flex gap-3 flex-row justify-content-center mt-4">-->
+<!--            <Card :class="`w-15rem h-4rem ${selectedUserType === 'jobSeeker' ? 'bg-blue-50' : ''} cursor-pointer`" @click="selectedUserType = 'jobSeeker'">-->
+<!--                <template #subtitle>Esmu darba meklētājs</template>-->
+<!--            </Card>-->
+<!--            <Card :class="`w-15rem h-4rem ${selectedUserType === 'employer' ? 'bg-blue-50' : ''} cursor-pointer`" @click="selectedUserType = 'employer'">-->
+<!--                <template #subtitle>Esmu darba devējs</template>-->
+<!--            </Card>-->
+<!--        </div>-->
+
     </div>
 
     <div>
@@ -21,7 +31,7 @@
         </div>
         <InlineMessage v-if="errMessage" severity="error">{{ errMessage }}</InlineMessage>
 
-        <Button @click="login" :loading="loading" label="Ielogoties" icon="pi pi-user" class="w-full mt-3"></Button>
+        <Button @click="submitLoginForm" :loading="loading" label="Ielogoties" icon="pi pi-user" class="w-full mt-3"></Button>
     </div>
 </template>
 <script setup>
@@ -42,8 +52,17 @@ const loading = ref(false);
 const errMessage = ref('');
 const email = ref('');
 const password = ref('');
+const selectedUserType = ref('jobSeeker');
 
-const login = async () => {
+const submitLoginForm = () => {
+    if (selectedUserType.value === 'jobSeeker') {
+        loginUser();
+    } else if (selectedUserType.value === 'employer') {
+        loginEmployer();
+    }
+};
+
+const loginUser = async () => {
     loading.value = true;
     const success = await profileStore.login(email.value, password.value);
 
@@ -58,4 +77,9 @@ const login = async () => {
 
     loading.value = false;
 };
+
+const loginEmployer = async () => {
+    loading.value = true
+}
+
 </script>

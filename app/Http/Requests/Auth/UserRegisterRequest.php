@@ -4,7 +4,10 @@ namespace App\Http\Requests\Auth;
 
 use App\DataTransferObjects\Auth\RegisterDataTransferObject;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use App\Helpers\Rules\ValidationRuleHelper;
+use App\Enums\User\UserTypeEnum;
 
 class UserRegisterRequest extends FormRequest
 {
@@ -24,11 +27,23 @@ class UserRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => [
+                ValidationRuleHelper::REQUIRED,
+                ValidationRuleHelper::STRING,
+                ValidationRuleHelper::EMAIL,
+                ValidationRuleHelper::max(255),
+                'unique:users'
+            ],
+            'password' => [
+                ValidationRuleHelper::STRING,
+                ValidationRuleHelper::REQUIRED,
+                ValidationRuleHelper::min(6),
+                'confirmed'
+            ],
+            'user_type' => [
+                ValidationRuleHelper::REQUIRED,
+                new Enum(UserTypeEnum::class)
+            ]
         ];
     }
 

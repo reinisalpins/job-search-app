@@ -11,14 +11,12 @@ class EmployerProfile extends Model
     use HasFactory;
 
     public const AUTH_ID = 'auth_id';
-    public const COMPANY_NAME = 'company_name';
     public const COMPANY_WEBSITE = 'company_website';
     public const COMPANY_LOGO = 'company_logo';
     public const COMPANY_DESCRIPTION = 'company_description';
 
     protected $fillable = [
         self::AUTH_ID,
-        self::COMPANY_NAME,
         self::COMPANY_WEBSITE,
         self::COMPANY_LOGO,
         self::COMPANY_DESCRIPTION,
@@ -32,17 +30,6 @@ class EmployerProfile extends Model
     public function setAuthId(int $auth_id): self
     {
         $this->{self::AUTH_ID} = $auth_id;
-        return $this;
-    }
-
-    public function getCompanyName(): string
-    {
-        return $this->{self::COMPANY_NAME};
-    }
-
-    public function setCompanyName(string $company_name): self
-    {
-        $this->{self::COMPANY_NAME} = $company_name;
         return $this;
     }
 
