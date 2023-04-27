@@ -49,18 +49,14 @@
         </Message>
     </div>
 
-    <CreateEditUserProfile :is-profile-info-set="isUserProfileSet" :profile-info="userProfile"
-                           v-if="createEditUserProfile" @close="closeEditProfile"/>
-
 </template>
 <script setup>
 import Panel from "primevue/panel";
 import Divider from "primevue/divider";
 import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
-import {useProfileStore} from "../../store/user";
+import {useProfileStore} from "../../../store/user";
 import Message from "primevue/message";
 import Chip from "primevue/chip";
-import CreateEditUserProfile from "./CreateEditUserProfile.vue";
 
 const createEditUserProfile = ref(false)
 
@@ -83,14 +79,4 @@ onMounted(() => {
 
 </script>
 <style lang="scss">
-.profile-info-list {
-    display: flex;
-    flex-direction: column;
-
-    li {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-}
 </style>

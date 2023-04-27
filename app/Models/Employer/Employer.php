@@ -5,17 +5,24 @@ namespace App\Models\Employer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Employer extends Model
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
+    public const ID = 'id';
     public const EMAIL = 'email';
     public const PASSWORD = 'password';
+    public const COMPANY_NAME = 'company';
+    public const COMPANY_PHONE = 'phone';
 
     protected $fillable = [
         self::EMAIL,
         self::PASSWORD,
+        self::COMPANY_NAME,
+        self::COMPANY_PHONE,
     ];
 
     public function getEmail(): string
@@ -37,6 +44,23 @@ class Employer extends Model
     public function setPassword(string $password): self
     {
         $this->{self::PASSWORD} = $password;
+        return $this;
+    }
+
+    public function setCompany(string $company): self
+    {
+        $this->{self::COMPANY_NAME} = $company;
+        return $this;
+    }
+
+    public function getCompany(): string
+    {
+        return $this->{self::COMPANY_NAME};
+    }
+
+    public function setCompanyPhone(string $number): self
+    {
+        $this->{self::COMPANY_PHONE} = $number;
         return $this;
     }
 

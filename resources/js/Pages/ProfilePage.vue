@@ -1,93 +1,30 @@
 <template>
     <div class="profile-container">
         <div class="container" style="position: relative">
-            <!--            <Button :loading="logoutLoading" label="Izlogoties" @click="logout"/>-->
             <div v-if="!user" class="surface-section w-full">
                 <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="7"/>
             </div>
             <div class="profile-divider" v-if="user">
                 <div class="profile-navigation">
-                    <div class="profile-navbar">
-                        <ul>
-                            <li :class="activeComponent === 1 ? 'active' : ''" @click="router.push('/profils')">
-                                Profila informācija
-                            </li>
-                            <li @click="router.push('/profils/pieteikumi')"
-                                :class="activeComponent === 2 ? 'active' : ''">
-                                Mani pieteikumi
-                            </li>
-                            <li @click="router.push('/profils/statistika')"
-                                :class="activeComponent === 3 ? 'active' : ''">
-                                Pieteikumu statistika
-                            </li>
-                            <li @click="router.push('/profils/mainit-paroli')"
-                                :class="activeComponent === 4 ? 'active' : ''">
-                                Mainīt paroli
-                            </li>
-                            <Button type="button" :loading="logoutLoading" class="logout-btn" label="Izlogoties"
-                                    @click="logout"/>
-                        </ul>
-                    </div>
+                    <JobSeekerProfileNavbar v-if="user.user_type === 'job_seeker'"/>
+                    <EmployerProfileNavbar v-if="user.user_type === 'employer'"/>
                 </div>
                 <div class="profile-main">
-                    <ProfileInfo :user="user" v-if="activeComponent === 1"/>
-                    <UserApplyStats v-if="activeComponent === 3"/>
-                    <ChangePassword v-if="activeComponent === 4"/>
+                    <router-view></router-view>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import {computed, ref, watch, onBeforeMount, onMounted} from 'vue';
+import {computed} from 'vue';
 import {useProfileStore} from "../store/user";
 import ProgressSpinner from "primevue/progressspinner";
-import router from "../router";
-import ProfileInfo from "../components/Profile/ProfileInfo.vue";
-import Button from "primevue/button";
-import ChangePassword from "../components/Profile/ChangePassword.vue";
-import UserApplyStats from "../components/Profile/UserApplyStats.vue";
+import JobSeekerProfileNavbar from "../components/Profile/JobSeeker/JobSeekerProfileNavbar.vue";
+import EmployerProfileNavbar from "../components/Profile/Employer/Profile/EmployerProfileNavbar.vue";
 
 const profileStore = useProfileStore()
 const user = computed(() => profileStore.getUser)
-const logoutLoading = ref(false)
-const activeComponent = ref(1)
-
-const setActiveComponentByRoute = () => {
-    const currentPath = router.currentRoute.value.path;
-    switch (currentPath) {
-        case '/profils':
-            activeComponent.value = 1;
-            break;
-        case '/profils/pieteikumi':
-            activeComponent.value = 2;
-            break;
-        case '/profils/statistika':
-            activeComponent.value = 3;
-            break;
-        case '/profils/mainit-paroli':
-            activeComponent.value = 4;
-            break;
-        default:
-            activeComponent.value = 1;
-            break;
-    }
-}
-
-watch(router.currentRoute, () => {
-    setActiveComponentByRoute()
-})
-
-onBeforeMount(() => {
-    setActiveComponentByRoute()
-})
-
-const logout = async () => {
-    logoutLoading.value = true
-    await profileStore.logout()
-    await router.push('/')
-    logoutLoading.value = false
-}
 
 </script>
 <style lang="scss">
@@ -190,6 +127,17 @@ const logout = async () => {
     &:enabled:active {
         background: transparent !important;
         color: black !important;
+    }
+}
+
+.profile-info-list {
+    display: flex;
+    flex-direction: column;
+
+    li {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
 }
 

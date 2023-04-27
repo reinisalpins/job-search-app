@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\DataTransferObjects\User\CreateUserProfileData;
+use App\Enums\User\UserTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUserProfileInfoRequest extends FormRequest
@@ -12,7 +13,7 @@ class CreateUserProfileInfoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->user_type === UserTypeEnum::JOB_SEEKER;
     }
 
     public function rules(): array

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::group(['prefix' => '/employer'], function () {
+    Route::post('/register', [AuthController::class, 'employerRegister']);
+    Route::post('/login', [AuthController::class, 'employerLogin']);
+});
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => '/user'], function () {
         Route::group(['prefix' => '/profile'], function () {
@@ -34,11 +40,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             });
         });
     });
+
+    Route::group(['prefix' => '/employer'], function () {
+        Route::group(['prefix' => '/profile'], function () {
+           Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+              Route::post('/', [EmployerController::class, 'setEmployerProfileInformation']);
+              Route::patch('/', [EmployerController::class, 'updateEmployerProfileInformation']);
+              Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
+           });
+        });
+    });
 });
 
 
 Route::group(['prefix' => '/user'], function () {
     Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-        Route::patch('/changePassword', [UserController::class, 'changeUserPassword']);
+        Route::patch('/password', [UserController::class, 'changeUserPassword']);
     });
 });

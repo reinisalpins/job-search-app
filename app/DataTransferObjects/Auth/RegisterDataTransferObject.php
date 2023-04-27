@@ -7,11 +7,10 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class RegisterDataTransferObject extends DataTransferObject
 {
-    public string $first_name;
-    public string $last_name;
-    public string $phone;
+
     public string $email;
     public string $password;
+    public string $userType;
 
     /**
      * @throws UnknownProperties
@@ -19,10 +18,8 @@ class RegisterDataTransferObject extends DataTransferObject
     public static function fromRequest(UserRegisterRequest $userRegisterRequest): self
     {
         return new self([
-            'first_name' => $userRegisterRequest->input('first_name'),
-            'last_name' => $userRegisterRequest->input('last_name'),
-            'phone' => $userRegisterRequest->input('phone'),
             'email' => $userRegisterRequest->input('email'),
+            'userType' => $userRegisterRequest->input('user_type'),
             'password' => $userRegisterRequest->input('password'),
         ]);
     }

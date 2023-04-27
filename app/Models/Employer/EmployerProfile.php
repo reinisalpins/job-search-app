@@ -10,28 +10,36 @@ class EmployerProfile extends Model
 {
     use HasFactory;
 
-    public const AUTH_ID = 'auth_id';
+    public const ID  = 'id';
+    public const USER_ID = 'user_id';
     public const COMPANY_NAME = 'company_name';
-    public const COMPANY_WEBSITE = 'company_website';
-    public const COMPANY_LOGO = 'company_logo';
-    public const COMPANY_DESCRIPTION = 'company_description';
+    public const PHONE = 'phone';
+    public const ABOUT = 'about';
+    public const LOCATION = 'location';
+    public const WEBSITE_URL = 'website_url';
 
     protected $fillable = [
-        self::AUTH_ID,
+        self::USER_ID,
         self::COMPANY_NAME,
-        self::COMPANY_WEBSITE,
-        self::COMPANY_LOGO,
-        self::COMPANY_DESCRIPTION,
+        self::PHONE,
+        self::ABOUT,
+        self::LOCATION,
+        self::WEBSITE_URL,
     ];
 
-    public function getAuthId(): int
+    public function getId(): int
     {
-        return $this->{self::AUTH_ID};
+        return $this->{self::ID};
     }
 
-    public function setAuthId(int $auth_id): self
+    public function getUserId(): int
     {
-        $this->{self::AUTH_ID} = $auth_id;
+        return $this->{self::USER_ID};
+    }
+
+    public function setUserId(int $user_id): self
+    {
+        $this->{self::USER_ID} = $user_id;
         return $this;
     }
 
@@ -46,41 +54,58 @@ class EmployerProfile extends Model
         return $this;
     }
 
-    public function getCompanyWebsite(): ?string
+    public function getPhone(): ?string
     {
-        return $this->{self::COMPANY_WEBSITE};
+        return $this->{self::PHONE};
     }
 
-    public function setCompanyWebsite(?string $company_website): self
+    public function setPhone(?string $phone): self
     {
-        $this->{self::COMPANY_WEBSITE} = $company_website;
+        $this->{self::PHONE} = $phone;
         return $this;
     }
 
-    public function getCompanyLogo(): ?string
+    public function getAbout(): ?string
     {
-        return $this->{self::COMPANY_LOGO};
+        return $this->{self::ABOUT};
     }
 
-    public function setCompanyLogo(?string $company_logo): self
+    public function setAbout(?string $about): self
     {
-        $this->{self::COMPANY_LOGO} = $company_logo;
+        $this->{self::ABOUT} = $about;
         return $this;
     }
 
-    public function getCompanyDescription(): ?string
+    public function getLocation(): ?string
     {
-        return $this->{self::COMPANY_DESCRIPTION};
+        return $this->{self::LOCATION};
     }
 
-    public function setCompanyDescription(?string $company_description): self
+    public function setLocation(?string $location): self
     {
-        $this->{self::COMPANY_DESCRIPTION} = $company_description;
+        $this->{self::LOCATION} = $location;
         return $this;
     }
 
-    public function employer(): BelongsTo
+    public function getWebsiteUrl(): ?string
     {
-        return $this->belongsTo(Employer::class, 'auth_id');
+        return $this->{self::WEBSITE_URL};
     }
+
+    public function setWebsiteUrl(?string $website_url): self
+    {
+        $this->{self::WEBSITE_URL} = $website_url;
+        return $this;
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function findByUserId(int $user_id): ?self
+    {
+        return self::where('user_id', $user_id)->first();
+    }
+
 }

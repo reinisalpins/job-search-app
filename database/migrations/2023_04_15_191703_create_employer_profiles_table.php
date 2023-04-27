@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('employer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('auth_id');
-            $table->string('company_name');
-            $table->string('company_website')->nullable();
-            $table->string('company_logo')->nullable();
-            $table->text('company_description')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('company_name', 255);
+            $table->string('phone', 15)->nullable();
+            $table->longText('about')->nullable();
+            $table->string('location')->nullable();
+            $table->string('website_url')->nullable();
             $table->timestamps();
-
-            $table->foreign('auth_id')
-                ->references('id')
-                ->on('employers')
-                ->onDelete('cascade');
         });
     }
 

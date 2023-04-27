@@ -133,8 +133,8 @@ export const useProfileStore = defineStore({
         async changeUserPassword(userId, password) {
             this.loadingChangePassword = true
             try {
-                const response = await authAxios.patch(`/api/user/${userId}/changePassword`, password)
-                return 200
+                const response = await authAxios.patch(`/api/user/${userId}/password`, password)
+                return response.status
             } catch (error) {
                 return 400
             } finally {

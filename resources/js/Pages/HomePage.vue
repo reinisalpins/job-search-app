@@ -30,7 +30,7 @@
                     arī pieredzējušiem speciālistiem.</h2>
             </div>
             <div class='cards'>
-                <div class='card' v-for="(card, index) in cardsData" :key="index">
+                <div class='card shadow-1' v-for="(card, index) in cardsData" :key="index">
                     <i :class="card.icon" style="font-size: 3rem"></i>
                     <h1>{{ card.title }}</h1>
                     <p>{{ card.description }}</p>

@@ -1,6 +1,6 @@
 <template>
     <Dialog :dismissableMask="true" :draggable="false" header=" " v-model:visible="indexStore.isAuthDialogOpen" modal
-            :style="{ width: '40vw' }" :breakpoints="{ '960px': '75vw', '641px': '100vw' }">
+            :style="{ width: '40vw' }" :breakpoints="{ '1100px': '75vw', '641px': '100vw' }">
         <Login v-if="!indexStore.getIsRegisterActive"/>
         <Register v-if="indexStore.getIsRegisterActive"/>
     </Dialog>

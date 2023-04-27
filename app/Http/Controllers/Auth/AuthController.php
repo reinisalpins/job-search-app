@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\EmployerLoginRequest;
+use App\Http\Requests\Auth\EmployerRegisterRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\User;
 use App\Repositories\Auth\AuthRepository;
@@ -31,6 +33,9 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * @throws ValidationException
+     */
     public function login(Request $request): JsonResponse
     {
         $request->validate([
