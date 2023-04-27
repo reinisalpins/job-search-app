@@ -4,17 +4,24 @@
             <div v-if="!user" class="surface-section w-full">
                 <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="7"/>
             </div>
-            <UserProfileLayout v-if="user && user.user_type === 'job_seeker'"/>
-            <EmployerProfileLayout v-if="user && user.user_type === 'employer'"/>
+            <div class="profile-divider" v-if="user">
+                <div class="profile-navigation">
+                    <JobSeekerProfileNavbar v-if="user.user_type === 'job_seeker'"/>
+                    <EmployerProfileNavbar v-if="user.user_type === 'employer'"/>
+                </div>
+                <div class="profile-main">
+                    <router-view></router-view>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script setup>
-import {computed, ref, watch, onBeforeMount, onMounted} from 'vue';
+import {computed} from 'vue';
 import {useProfileStore} from "../store/user";
 import ProgressSpinner from "primevue/progressspinner";
-import UserProfileLayout from "../components/Profile/UserProfileLayout.vue";
-import EmployerProfileLayout from "../components/Profile/EmployerProfileLayout.vue";
+import JobSeekerProfileNavbar from "../components/Profile/JobSeeker/JobSeekerProfileNavbar.vue";
+import EmployerProfileNavbar from "../components/Profile/Employer/Profile/EmployerProfileNavbar.vue";
 
 const profileStore = useProfileStore()
 const user = computed(() => profileStore.getUser)
@@ -120,6 +127,17 @@ const user = computed(() => profileStore.getUser)
     &:enabled:active {
         background: transparent !important;
         color: black !important;
+    }
+}
+
+.profile-info-list {
+    display: flex;
+    flex-direction: column;
+
+    li {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
 }
 

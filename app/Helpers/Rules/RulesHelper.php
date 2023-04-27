@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
 
-final class ValidationRuleHelper
+final class RulesHelper
 {
     // Email
     public const EMAIL = [self::STRING, 'email:strict,dns'];
@@ -29,7 +29,9 @@ final class ValidationRuleHelper
     public const INTEGER = 'integer';
     public const UNIQUE = 'unique';
     public const IN = 'in:';
+    public const URL = 'url';
     public const REGEX = 'regex:';
+    public const CONFIRMED = 'confirmed';
 
     // Files
     public const FILE = 'file';

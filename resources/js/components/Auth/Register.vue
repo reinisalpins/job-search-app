@@ -6,15 +6,8 @@
            @click="indexStore.makeRegisterInactive">Ielogojieties
             šeit</a>
     </div>
-    <div class="profile-type flex gap-3 flex-row justify-content-center flex-wrap mt-2 mb-3">
-        <Card :class="`w-15rem h-4rem ${selectedUserType === 'job_seeker' ? 'bg-blue-50' : ''} cursor-pointer`"
-              @click="selectedUserType = 'job_seeker'">
-            <template #subtitle>Esmu darba meklētājs</template>
-        </Card>
-        <Card :class="`w-15rem h-4rem ${selectedUserType === 'employer' ? 'bg-blue-50' : ''} cursor-pointer`"
-              @click="selectedUserType = 'employer'">
-            <template #subtitle>Esmu darba devējs</template>
-        </Card>
+    <div class="profile-type flex gap-3 flex-row justify-content-center mt-2 mb-3">
+        <SelectButton :unselectable="true" v-model="value" :options="options" aria-labelledby="basic" />
     </div>
 
     <div>
@@ -35,14 +28,14 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 import router from "../../router";
 import Button from "primevue/button";
 import InlineMessage from "primevue/inlinemessage";
 import {useProfileStore} from "../../store/user";
 import InputText from "primevue/inputtext";
 import {useIndex} from "../../store/indexPinia";
-import Card from "primevue/card";
+import SelectButton from "primevue/selectbutton";
 
 const profileStore = useProfileStore();
 const email = ref('');
@@ -52,9 +45,12 @@ const errMessage = ref('');
 const loading = ref(false)
 const indexStore = useIndex()
 const selectedUserType = ref('job_seeker');
+const value = ref('Esmu darba meklētājs');
+const options = ref(['Esmu darba meklētājs', 'Esmu darba devējs']);
 
 const handleSubmit = async () => {
     if (validateFields()) {
+
         const userData = {
             email: email.value,
             password: password.value,
@@ -74,6 +70,14 @@ const handleSubmit = async () => {
         loading.value = false;
     }
 }
+
+watch(value, (newValue, oldValue) => {
+    if (newValue === 'Esmu darba meklētājs') {
+        selectedUserType.value = 'job_seeker'
+    }else {
+        selectedUserType.value = 'employer'
+    }
+});
 
 const validateFields = () => {
 
@@ -99,10 +103,14 @@ const validateFields = () => {
         return false;
     }
 
-
     errMessage.value = ''
     return true;
 };
 
-
 </script>
+
+<style lang="scss">
+.p-selectbutton {
+    display: flex !important;
+}
+</style>

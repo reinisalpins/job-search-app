@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('employer_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('company', 255);
-            $table->string('phone', 15);
-            $table->longText('about');
-            $table->string('location');
+            $table->string('company_name', 255);
+            $table->string('phone', 15)->nullable();
+            $table->longText('about')->nullable();
+            $table->string('location')->nullable();
+            $table->string('website_url')->nullable();
             $table->timestamps();
         });
     }
