@@ -30,13 +30,16 @@
             <Divider/>
             <li>
                 <span>Uzņēmuma mājas lapa </span>
-                <h3>{{ profileInfo.website_url }}</h3>
+                <a class="text-xl hover:underline" target="_blank"
+                   :href="profileInfo.website_url">{{ profileInfo.website_url }}
+                </a>
             </li>
         </ul>
     </Panel>
     <div v-if="!profileInfo && !isProfileInfoLoading">
         <Message severity="info" :closable="false">Uzņemuma informācija vēl nav iestatita, to variet izdarīt
-            <span class="font-bold cursor-pointer hover:underline" @click="router.push('/profils/uznemums/informacija')">šeit</span>
+            <span class="font-bold cursor-pointer hover:underline"
+                  @click="router.push('/profils/uznemums/informacija')">šeit</span>
         </Message>
     </div>
 </template>
