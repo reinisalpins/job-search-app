@@ -16,9 +16,12 @@ const userStore = useProfileStore()
 
 const isProfileInfoLoading = computed(() => employerStore.isEmployerProfileLoading)
 const user = computed(() => userStore.getUser)
+const employerInfo = computed(() => employerStore.getEmployerProfileInfo)
 
 onMounted(() => {
-    employerStore.fetchEmployerProfile(user.value.id)
+    if (!employerInfo.value) {
+        employerStore.fetchEmployerProfile(user.value.id)
+    }
 })
 
 </script>

@@ -44,9 +44,12 @@ export const useEmployerStore = defineStore('employers', {
             try {
                 const response = await authAxios.patch(`/api/employer/profile/${userId}`, payload)
                 this.employerProfile = response.data.data;
-                return { success: true, errorMessage: null };
+                return {success: true, errorMessage: null};
             } catch (error) {
-                return { success: false, errorMessage: error.response?.data?.message || 'Aizpildiet laukus korekti un mēginiet vēlreiz' };
+                return {
+                    success: false,
+                    errorMessage: error.response?.data?.message || 'Aizpildiet laukus korekti un mēginiet vēlreiz'
+                };
             }
         },
     },

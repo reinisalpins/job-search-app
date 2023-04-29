@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Employer\EmployerController;
+use App\Http\Controllers\Listing\ListingController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
               Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
            });
         });
+    });
+
+    Route::group(['prefix' => '/listing'], function () {
+       Route::post('/', [ListingController::class, 'createJobListing']);
     });
 });
 
