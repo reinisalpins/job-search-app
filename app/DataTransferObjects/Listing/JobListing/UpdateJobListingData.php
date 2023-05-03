@@ -1,13 +1,13 @@
 <?php
 
-namespace App\DataTransferObjects\Listing;
+namespace App\DataTransferObjects\Listing\JobListing;
 
-use App\Http\Requests\Listing\CreateJobListingRequest;
+use App\Http\Requests\Listing\JobListing\UpdateJobListingRequest;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class CreateJobListingData extends DataTransferObject
+class UpdateJobListingData extends DataTransferObject
 {
-    public int $userId;
+    public int $listingId;
     public string $listingType;
     public string $title;
     public string $location;
@@ -15,10 +15,10 @@ class CreateJobListingData extends DataTransferObject
     public string $salaryRange;
     public string $description;
 
-    public static function fromRequest(CreateJobListingRequest $request): self
+    public static function fromRequest(UpdateJobListingRequest $request): self
     {
         return new self([
-            'userId' => $request->input('userId'),
+            'listingId' => $request->getListingId(),
             'listingType' => $request->input('listingType'),
             'title' => $request->input('title'),
             'location' => $request->input('location'),

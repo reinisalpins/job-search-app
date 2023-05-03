@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('location');
             $table->timestamp('date_posted');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('listing_type_id')->references('id')->on('listing_types')->onDelete('cascade');

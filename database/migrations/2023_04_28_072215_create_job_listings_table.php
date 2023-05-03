@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('job_listings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('listing_id');
-            $table->enum('employment_type', ['full_time', 'part_time', 'contract', 'temporary', 'other']);
+            $table->enum('employment_type', ['full_time', 'part_time', 'contract', 'temporary']);
             $table->string('salary_range');
             $table->text('description');
             $table->timestamps();

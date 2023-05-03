@@ -4,7 +4,7 @@ namespace App\Enums\Listings;
 
 enum ListingTypeEnum: string
 {
-    case JOB = '1';
-    case INTERNSHIP = '2';
+    case INTERNSHIP = '1';
+    case JOB = '2';
     case FREELANCE = '3';
 }

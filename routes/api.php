@@ -44,16 +44,34 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['prefix' => '/employer'], function () {
         Route::group(['prefix' => '/profile'], function () {
-           Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-              Route::post('/', [EmployerController::class, 'setEmployerProfileInformation']);
-              Route::patch('/', [EmployerController::class, 'updateEmployerProfileInformation']);
-              Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
-           });
+            Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+                Route::post('/', [EmployerController::class, 'setEmployerProfileInformation']);
+                Route::patch('/', [EmployerController::class, 'updateEmployerProfileInformation']);
+                Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
+            });
+        });
+
+        Route::group(['prefix' => '/{employerId}', 'where' => ['userId' => '[0-9]+']], function () {
+            Route::group(['prefix' => '/listings'], function () {
+                Route::get('/all', [ListingController::class, 'showAllEmployersListings']);
+            });
         });
     });
 
-    Route::group(['prefix' => '/listing'], function () {
-       Route::post('/', [ListingController::class, 'createJobListing']);
+    Route::group(['prefix' => '/listings'], function () {
+        Route::group(['prefix' => 'job'], function () {
+            Route::get('/', [ListingController::class, 'showAllJobListings']);
+            Route::post('/', [ListingController::class, 'createJobListing']);
+
+            Route::group(['prefix' => '/{listingId}'], function () {
+                Route::patch('/', [ListingController::class, 'updateJobListing']);
+            });
+        });
+
+        Route::group(['prefix' => '/{listingId}'], function () {
+            Route::delete('/', [ListingController::class, 'deleteListing']);
+            Route::get('/', [ListingController::class, 'showListing']);
+        });
     });
 });
 

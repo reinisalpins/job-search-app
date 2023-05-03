@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Employer\EmployerProfile;
 use App\Models\User\UserProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -18,6 +19,8 @@ class User extends Authenticatable
     public const PASSWORD = 'password';
     public const USER_TYPE = 'user_type';
 
+    public const EMPLOYER_PROFILE_RELATION = 'employerProfile';
+
     protected $fillable = [
         self::EMAIL,
         self::PASSWORD,
@@ -33,14 +36,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function profile(): HasOne
+    public function userProfile(): HasOne
     {
         return $this->hasOne(UserProfile::class, 'user_id');
+    }
+
+    public function employerProfile(): HasOne
+    {
+        return $this->hasOne(EmployerProfile::class, 'user_id');
+    }
+
+    public function relatedEmployerProfile(): EmployerProfile
+    {
+        return $this->{self::EMPLOYER_PROFILE_RELATION};
     }
 
     public function getId(): int
     {
         return $this->{self::ID};
+    }
+
+    public function getEmail(): string
+    {
+        return $this->{self::EMAIL};
     }
 
     public function setEmail(string $email): void
