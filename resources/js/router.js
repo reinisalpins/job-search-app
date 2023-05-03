@@ -5,10 +5,13 @@ import ProfilePage from "./Pages/ProfilePage.vue";
 import NotFoundPage from "./Pages/NotFoundPage.vue";
 import Employers from "./Pages/Employers.vue";
 import JobListings from "./components/Profile/Employer/JobListings/JobListings.vue";
-import JobListingHistory from "./components/Profile/Employer/JobListings/JobListingHistory.vue";
 import CompanyInfo from "./components/Profile/Employer/Profile/CompanyInfo.vue";
 import CompanyInfoForm from "./components/Profile/Employer/Profile/CompanyInfoForm.vue";
 import CompanyInfoPanel from "./components/Profile/Employer/Profile/CompanyInfoPanel.vue";
+import AllListings from "./components/Profile/Employer/JobListings/AllListings.vue";
+import ActiveListings from "./components/Profile/Employer/JobListings/ActiveListings.vue";
+import ListingHistory from "./components/Profile/Employer/JobListings/ListingHistory.vue";
+import ListingSettings from "./components/Profile/Employer/JobListings/ListingSettings.vue";
 
 const routes = [
     {path: '/', component: HomePage},
@@ -18,7 +21,10 @@ const routes = [
         path: '/profils', component: ProfilePage, children: [
             {
                 path: 'vakances', component: JobListings, children: [
-                    {path: 'vesture', component: JobListingHistory}
+                    {path: '', component: AllListings},
+                    {path: 'aktivas', component: ActiveListings},
+                    {path: 'vesture', component: ListingHistory},
+                    {path: 'iestatijumi', component: ListingSettings},
                 ]
             },
             {

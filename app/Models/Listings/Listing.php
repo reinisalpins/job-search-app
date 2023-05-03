@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Listing extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public const ID = 'id';
     public const USER_ID = 'user_id';
@@ -18,6 +19,8 @@ class Listing extends Model
     public const TITLE = 'title';
     public const LOCATION = 'location';
     public const DATE_POSTED = 'date_posted';
+    public const JOB_LISTING_RELATION = 'jobListing';
+    public const USER_RELATION = 'user';
 
     protected $fillable = [
         self::USER_ID,
@@ -100,6 +103,11 @@ class Listing extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function relatedUser(): User
+    {
+        return $this->{self::USER_RELATION};
+    }
+
     public function listingType(): BelongsTo
     {
         return $this->belongsTo(ListingType::class, 'listing_type_id');
@@ -110,9 +118,14 @@ class Listing extends Model
         return $this->hasOne(Internship::class, 'listing_id');
     }
 
-    public function jobListingDetail(): HasOne
+    public function jobListing(): HasOne
     {
         return $this->hasOne(JobListing::class, 'listing_id');
+    }
+
+    public function relatedJobListing(): JobListing
+    {
+        return $this->{self::JOB_LISTING_RELATION};
     }
 
     public function freelanceListing(): HasOne
