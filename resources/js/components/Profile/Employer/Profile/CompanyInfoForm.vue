@@ -5,36 +5,39 @@
                 <span class="pi pi-times-circle text-xl" @click="router.push('/profils/uznemums')"></span>
             </button>
         </template>
-        <ul class="profile-info-list">
-            <li class="flex gap-3">
-                <span>Uzņēmuma nosaukums </span>
+        <ul>
+            <li>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma nosaukums</h1>
                 <InputText v-model="companyName" class="inputfield"/>
             </li>
             <Divider/>
-            <li class="flex gap-3">
-                <span>Tālrunis </span>
+            <li>
+                <h1 class="text-2xl font-normal mb-2">Tālrunis</h1>
                 <InputText v-model="phone" class="inputfield"/>
             </li>
             <Divider/>
-            <li class="flex gap-3">
-                <span>Atrašanās vieta</span>
+            <li>
+                <h1 class="text-2xl font-normal mb-2">Atrašanās vieta</h1>
                 <InputText v-model="location" class="inputfield"/>
             </li>
             <Divider/>
-            <li class="flex gap-3">
-                <span>Uzņēmuma informācija (īss apraksts par uzņēmumu, nodarbošanās, utt.)</span>
+            <li>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma informācija (īss apraksts par uzņēmumu, nodarbošanās,
+                    utt.)</h1>
                 <Textarea v-model="about" class="textarea"/>
             </li>
             <Divider/>
-            <li class="flex gap-3">
-                <span>Uzņēmuma mājas lapa</span>
+            <li>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma mājas lapa</h1>
                 <InputText v-model="website" class="inputfield"/>
             </li>
             <Divider/>
-            <div class="flex gap-3 flex-wrap align-items-center">
-                <Button :loading="loading" @click="submitForm" class="save-btn" label="Saglabāt"/>
-                <InlineMessage severity="error" v-if="errMessage">{{ errMessage }}</InlineMessage>
-            </div>
+            <li>
+                <div class="flex gap-3 flex-wrap align-items-center">
+                    <Button :loading="loading" @click="submitForm" class="save-btn" label="Saglabāt"/>
+                    <InlineMessage severity="error" v-if="errMessage">{{ errMessage }}</InlineMessage>
+                </div>
+            </li>
         </ul>
     </Panel>
     <div v-if="success">
@@ -120,10 +123,6 @@ const submitForm = async () => {
 };
 </script>
 <style lang="scss">
-.inputfield {
-    max-width: 350px;
-    width: 100%;
-}
 
 .textarea {
     max-width: 500px;

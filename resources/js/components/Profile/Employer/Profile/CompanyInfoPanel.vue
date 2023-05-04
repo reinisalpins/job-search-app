@@ -6,35 +6,37 @@
                 <span class="pi pi-pencil text-xl" @click="router.push('/profils/uznemums/informacija')"></span>
             </button>
         </template>
-        <ul class="profile-info-list"
-            v-if="profileInfo && !isProfileInfoLoading">
+        <ul>
             <li>
-                <span>Uzņēmuma nosaukums </span>
-                <h3>{{ profileInfo.company_name }}</h3>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma nosaukums</h1>
+                <p class="text-xl font-bold">{{ profileInfo.company_name }}</p>
             </li>
             <Divider/>
             <li>
-                <span>Tālrunis </span>
-                <h3>{{ profileInfo.phone }}</h3>
+                <h1 class="text-2xl font-normal mb-2">Tālrunis</h1>
+                <p class="text-xl font-bold">{{ profileInfo.phone }}</p>
             </li>
             <Divider/>
             <li>
-                <span>Atrašanās vieta </span>
-                <h3>{{ profileInfo.location }}</h3>
+                <h1 class="text-2xl font-normal mb-2">Atrašanās vieta</h1>
+                <p class="text-xl font-bold">{{ profileInfo.location }}</p>
             </li>
             <Divider/>
             <li>
-                <span>Uzņēmuma informācija </span>
-                <h3>{{ profileInfo.about }}</h3>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma informācija</h1>
+                <p class="text-xl font-bold">{{ profileInfo.about }}</p>
             </li>
             <Divider/>
             <li>
-                <span>Uzņēmuma mājas lapa </span>
-                <a class="text-xl hover:underline" target="_blank"
-                   :href="profileInfo.website_url">{{ profileInfo.website_url }}
-                </a>
+                <h1 class="text-2xl font-normal mb-2">Uzņēmuma mājas lapa</h1>
+                <p>
+                    <a class="text-xl font-bold hover:underline" target="_blank"
+                       :href="profileInfo.website_url">{{ profileInfo.website_url }}
+                    </a>
+                </p>
             </li>
         </ul>
+
     </Panel>
     <div v-if="!profileInfo && !isProfileInfoLoading">
         <Message severity="info" :closable="false">Uzņemuma informācija vēl nav iestatita, to variet izdarīt

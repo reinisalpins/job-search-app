@@ -5,6 +5,7 @@ import router from './router';
 import {createPinia} from "pinia";
 import PrimeVue from 'primevue/config';
 import ToastService from "primevue/toastservice";
+import ConfirmationService from 'primevue/confirmationservice';
 import Toast from 'primevue/toast';
 
 const pinia = createPinia()
@@ -14,6 +15,7 @@ createApp(App)
     .use(PrimeVue)
     .use(pinia)
     .use(ToastService)
+    .use(ConfirmationService)
     .component('Toast', Toast)
     .mount('#app');
 

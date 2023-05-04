@@ -28,6 +28,6 @@ class ShowAllEmployerListingsRequest extends FormRequest
 
     public function getEmployerId(): int
     {
-        return $this->route('employerId');
+        return $this->route('userId');
     }
 }

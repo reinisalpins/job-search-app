@@ -20,7 +20,7 @@ class ListingResource extends JsonResource
             'title' => $this->resource->getTitle(),
             'location' => $this->resource->getLocation(),
             'listing_type' => $this->resource->getListingTypeId(),
-            'related_listing' => JobListingResource::make($this->resource->relatedJobListing()),
+            'related_listing' => ListingInfoResource::make($this->resource->relatedListingInfo()),
             'related_employer' => EmployerResource::make($this->resource->relatedUser()),
             'date_posted' => $this->resource->getDatePosted()
         ];

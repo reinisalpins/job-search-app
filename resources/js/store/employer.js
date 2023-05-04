@@ -16,7 +16,7 @@ export const useEmployerStore = defineStore('employers', {
         async fetchEmployerProfile(userId) {
             this.loadingEmployerProfile = true
             try {
-                const response = await authAxios.get(`/api/employer/profile/${userId}`)
+                const response = await authAxios.get(`/api/employer/${userId}/profile`)
                 if (response.data.status) {
                     this.employerProfile = null
                 } else {
@@ -29,7 +29,7 @@ export const useEmployerStore = defineStore('employers', {
         },
         async setEmployerProfile(userId, payload) {
             try {
-                const response = await authAxios.post(`/api/employer/profile/${userId}`, payload)
+                const response = await authAxios.post(`/api/employer/${userId}/profile`, payload)
                 this.employerProfile = response.data.data;
                 return {success: true, errorMessage: null};
             } catch (error) {
@@ -42,7 +42,7 @@ export const useEmployerStore = defineStore('employers', {
 
         async updateEmployerProfile(userId, payload) {
             try {
-                const response = await authAxios.patch(`/api/employer/profile/${userId}`, payload)
+                const response = await authAxios.patch(`/api/employer/${userId}/profile`, payload)
                 this.employerProfile = response.data.data;
                 return {success: true, errorMessage: null};
             } catch (error) {

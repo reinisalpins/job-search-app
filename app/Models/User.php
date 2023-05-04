@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Employer\EmployerProfile;
-use App\Models\User\UserProfile;
+use App\Models\JobSeeker\JobSeekerProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,7 +18,6 @@ class User extends Authenticatable
     public const EMAIL = 'email';
     public const PASSWORD = 'password';
     public const USER_TYPE = 'user_type';
-
     public const EMPLOYER_PROFILE_RELATION = 'employerProfile';
 
     protected $fillable = [
@@ -38,7 +37,7 @@ class User extends Authenticatable
 
     public function userProfile(): HasOne
     {
-        return $this->hasOne(UserProfile::class, 'user_id');
+        return $this->hasOne(JobSeekerProfile::class, 'user_id');
     }
 
     public function employerProfile(): HasOne

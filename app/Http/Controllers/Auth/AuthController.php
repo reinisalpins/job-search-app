@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\EmployerLoginRequest;
 use App\Http\Requests\Auth\EmployerRegisterRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
@@ -61,5 +62,13 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out'], 200);
+    }
+
+    /**
+     * @throws UnknownProperties
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        return $this->authRepository->changePassword($request->dataTransferObject());
     }
 }
