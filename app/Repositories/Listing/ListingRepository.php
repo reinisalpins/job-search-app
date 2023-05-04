@@ -2,54 +2,53 @@
 
 namespace App\Repositories\Listing;
 
-use App\DataTransferObjects\Listing\JobListing\CreateJobListingData;
-use App\DataTransferObjects\Listing\JobListing\UpdateJobListingData;
+use App\DataTransferObjects\Listing\CreateListingData;
+use App\DataTransferObjects\Listing\UpdateListingData;
 use App\Http\Resources\Listings\ListingResource;
 use App\Http\Resources\Listings\ListingsResourceCollection;
-use App\Models\Listings\JobListing;
+use App\Models\Listings\ListingInfo;
 use App\Models\Listings\Listing;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ListingRepository
 {
-    public function saveJobListing(CreateJobListingData $jobListingData): ListingResource
+    public function saveListing(CreateListingData $createListingData): ListingResource
     {
         $listing = new Listing();
-        $listing->setUserId($jobListingData->userId);
-        $listing->setListingTypeId($jobListingData->listingType);
-        $listing->setTitle($jobListingData->title);
-        $listing->setLocation($jobListingData->location);
+        $listing->setUserId($createListingData->userId);
+        $listing->setListingTypeId($createListingData->listingType);
+        $listing->setTitle($createListingData->title);
+        $listing->setLocation($createListingData->location);
         $listing->setDatePosted(now());
 
         $listing->save();
 
-        $jobListing = new JobListing();
-        $jobListing->setListingId($listing->getId());
-        $jobListing->setEmploymentType($jobListingData->employmentType);
-        $jobListing->setSalaryRange($jobListingData->salaryRange);
-        $jobListing->setDescription($jobListingData->description);
+        $listingInfo = new ListingInfo();
+        $listingInfo->setListingId($listing->getId());
+        $listingInfo->setEmploymentType($createListingData->employmentType);
+        $listingInfo->setSalaryRange($createListingData->salaryRange);
+        $listingInfo->setDescription($createListingData->description);
 
-        $jobListing->save();
+        $listingInfo->save();
 
         return new ListingResource($listing);
     }
 
-    public function updateJobListing(UpdateJobListingData $jobListingData): ListingResource
+    public function updateListing(UpdateListingData $updateListingData): ListingResource
     {
-        $listing = Listing::findOrFail($jobListingData->listingId);
-        $listing->setListingTypeId($jobListingData->listingType);
-        $listing->setTitle($jobListingData->title);
-        $listing->setLocation($jobListingData->location);
+        $listing = Listing::findOrFail($updateListingData->listingId);
+        $listing->setListingTypeId($updateListingData->listingType);
+        $listing->setTitle($updateListingData->title);
+        $listing->setLocation($updateListingData->location);
 
         $listing->save();
 
-        $jobListing = JobListing::where('listing_id', $listing->getId())->firstOrFail();
-        $jobListing->setEmploymentType($jobListingData->employmentType);
-        $jobListing->setSalaryRange($jobListingData->salaryRange);
-        $jobListing->setDescription($jobListingData->description);
+        $listingInfo = ListingInfo::where('listing_id', $listing->getId())->firstOrFail();
+        $listingInfo->setEmploymentType($updateListingData->employmentType);
+        $listingInfo->setSalaryRange($updateListingData->salaryRange);
+        $listingInfo->setDescription($updateListingData->description);
 
-        $jobListing->save();
+        $listingInfo->save();
 
         return new ListingResource($listing);
     }
@@ -66,7 +65,7 @@ class ListingRepository
         }
     }
 
-    public function showListing(int $listingId): ListingResource|JsonResponse
+    public function showSelectedEmployerListing(int $listingId): ListingResource|JsonResponse
     {
         $listing = Listing::find($listingId);
 
@@ -77,7 +76,7 @@ class ListingRepository
         }
     }
 
-    public function showAllJobListings(): ListingsResourceCollection
+    public function showAllListings(): ListingsResourceCollection
     {
         $listings = Listing::all();
 

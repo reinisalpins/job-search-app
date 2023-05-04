@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Rules;
 
+use App\Models\Listings\Listing;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
@@ -102,5 +103,14 @@ final class RulesHelper
     public static function mimes(array $fileTypes): string
     {
         return 'mimes:' . implode(',', $fileTypes);
+    }
+
+    public static function userIdBelongsToListing(int $listingId): \Closure
+    {
+        return function ($attribute, $value, $fail) use ($listingId) {
+            if (!Listing::where('id', $listingId)->where('user_id', $value)->exists()) {
+                $fail('The user id does not belong to the selected listing user id.');
+            }
+        };
     }
 }

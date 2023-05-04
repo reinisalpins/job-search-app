@@ -19,7 +19,7 @@ class Listing extends Model
     public const TITLE = 'title';
     public const LOCATION = 'location';
     public const DATE_POSTED = 'date_posted';
-    public const JOB_LISTING_RELATION = 'jobListing';
+    public const LISTING_INFO = 'listingInfo';
     public const USER_RELATION = 'user';
 
     protected $fillable = [
@@ -113,23 +113,14 @@ class Listing extends Model
         return $this->belongsTo(ListingType::class, 'listing_type_id');
     }
 
-    public function internship(): HasOne
+    public function listingInfo(): HasOne
     {
-        return $this->hasOne(Internship::class, 'listing_id');
+        return $this->hasOne(ListingInfo::class, 'listing_id');
     }
 
-    public function jobListing(): HasOne
+    public function relatedListingInfo(): ListingInfo
     {
-        return $this->hasOne(JobListing::class, 'listing_id');
+        return $this->{self::LISTING_INFO};
     }
 
-    public function relatedJobListing(): JobListing
-    {
-        return $this->{self::JOB_LISTING_RELATION};
-    }
-
-    public function freelanceListing(): HasOne
-    {
-        return $this->hasOne(FreelanceListing::class, 'listing_id');
-    }
 }

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Listing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Listing\CreateListingRequest;
 use App\Http\Requests\Listing\DeleteListingRequest;
-use App\Http\Requests\Listing\JobListing\CreateJobListingRequest;
-use App\Http\Requests\Listing\JobListing\UpdateJobListingRequest;
 use App\Http\Requests\Listing\ShowAllEmployerListingsRequest;
-use App\Http\Requests\Listing\ShowListingRequest;
+use App\Http\Requests\Listing\ShowEmployerListingRequest;
+use App\Http\Requests\Listing\UpdateListingRequest;
 use App\Http\Resources\Listings\ListingResource;
 use App\Http\Resources\Listings\ListingsResourceCollection;
 use App\Repositories\Listing\ListingRepository;
@@ -19,32 +19,32 @@ class ListingController extends Controller
     {
     }
 
-    public function createJobListing(CreateJobListingRequest $request): ListingResource
+    public function createListing(CreateListingRequest $request): ListingResource
     {
-        return $this->listingRepository->saveJobListing($request->dataTransferObject());
+        return $this->listingRepository->saveListing($request->dataTransferObject());
     }
 
-    public function updateJobListing(UpdateJobListingRequest $request): ListingResource
+    public function updateListing(UpdateListingRequest $request): ListingResource
     {
-        return $this->listingRepository->updateJobListing($request->dataTransferObject());
+        return $this->listingRepository->updateListing($request->dataTransferObject());
     }
 
-    public function deleteListing(DeleteListingRequest $request): JsonResponse
+    public function deleteSelectedListing(DeleteListingRequest $request): JsonResponse
     {
         return $this->listingRepository->deleteListing($request->getListingId());
     }
 
-    public function showListing(ShowListingRequest $request): ListingResource | JsonResponse
+    public function getSelectedEmployerListing(ShowEmployerListingRequest $request): ListingResource | JsonResponse
     {
-        return $this->listingRepository->showListing($request->getListingId());
+        return $this->listingRepository->showSelectedEmployerListing($request->getListingId());
     }
 
-    public function showAllJobListings(): ListingsResourceCollection
+    public function getAllJobListings(): ListingsResourceCollection
     {
-        return $this->listingRepository->showAllJobListings();
+        return $this->listingRepository->showAllListings();
     }
 
-    public function showAllEmployersListings(ShowAllEmployerListingsRequest $request): ListingsResourceCollection
+    public function getAllEmployersListings(ShowAllEmployerListingsRequest $request): ListingsResourceCollection
     {
         return $this->listingRepository->showAllEmployersListings($request->getEmployerId());
     }

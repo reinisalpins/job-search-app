@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Listing\ListingController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\JobSeeker\JobSeekerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,58 +26,53 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::group(['prefix' => '/employer'], function () {
-    Route::post('/register', [AuthController::class, 'employerRegister']);
-    Route::post('/login', [AuthController::class, 'employerLogin']);
+Route::group(['prefix' => '/user'], function () {
+    Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+        Route::patch('/password', [AuthController::class, 'changePassword']);
+    });
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::group(['prefix' => '/user'], function () {
-        Route::group(['prefix' => '/profile'], function () {
-            Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-                Route::get('/', [UserController::class, 'getUserProfileInformation']);
-                Route::post('/', [UserController::class, 'setUserProfileInformation']);
-                Route::patch('/', [UserController::class, 'patchUserProfileInformation']);
+    Route::group(['prefix' => '/job-seeker'], function () {
+        Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+
+            Route::group(['prefix' => '/profile'], function () {
+                Route::get('/', [JobSeekerController::class, 'getJobSeekerProfileInformation']);
+                Route::post('/', [JobSeekerController::class, 'setJobSeekerProfileInformation']);
+                Route::patch('/', [JobSeekerController::class, 'patchJobSeekerProfileInformation']);
             });
+
         });
     });
 
     Route::group(['prefix' => '/employer'], function () {
-        Route::group(['prefix' => '/profile'], function () {
-            Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+        Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
+
+            Route::group(['prefix' => '/profile'], function () {
+                Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
                 Route::post('/', [EmployerController::class, 'setEmployerProfileInformation']);
                 Route::patch('/', [EmployerController::class, 'updateEmployerProfileInformation']);
-                Route::get('/', [EmployerController::class, 'getEmployerProfileInformation']);
             });
-        });
 
-        Route::group(['prefix' => '/{employerId}', 'where' => ['userId' => '[0-9]+']], function () {
             Route::group(['prefix' => '/listings'], function () {
-                Route::get('/all', [ListingController::class, 'showAllEmployersListings']);
+                Route::get('/all', [ListingController::class, 'getAllEmployersListings']);
+                Route::get('/active', [ListingController::class, 'getActiveEmployersListings']);
+                Route::get('/inactive', [ListingController::class, 'getInactiveEmployersListings']);
+
+                Route::post('/', [ListingController::class, 'createListing']);
+
+                Route::group(['prefix' => '/{listingId}'], function () {
+                    Route::get('/', [ListingController::class, 'getSelectedEmployerListing']);
+                    Route::delete('/', [ListingController::class, 'deleteSelectedListing']);
+                    Route::patch('/', [ListingController::class, 'updateListing']);
+                });
             });
-        });
-    });
-
-    Route::group(['prefix' => '/listings'], function () {
-        Route::group(['prefix' => 'job'], function () {
-            Route::get('/', [ListingController::class, 'showAllJobListings']);
-            Route::post('/', [ListingController::class, 'createJobListing']);
-
-            Route::group(['prefix' => '/{listingId}'], function () {
-                Route::patch('/', [ListingController::class, 'updateJobListing']);
-            });
-        });
-
-        Route::group(['prefix' => '/{listingId}'], function () {
-            Route::delete('/', [ListingController::class, 'deleteListing']);
-            Route::get('/', [ListingController::class, 'showListing']);
         });
     });
 });
 
-
-Route::group(['prefix' => '/user'], function () {
-    Route::group(['prefix' => '/{userId}', 'where' => ['userId' => '[0-9]+']], function () {
-        Route::patch('/password', [UserController::class, 'changeUserPassword']);
-    });
+Route::group(['prefix' => '/listings'], function () {
+    Route::get('/job', [ListingController::class, 'getAllJobListings']);
+    Route::get('/internship', [ListingController::class, 'showAllInternshipListings']);
+    Route::get('/freelance', [ListingController::class, 'showAllFreelanceListings']);
 });

@@ -7,7 +7,6 @@ use App\DataTransferObjects\Employer\GetEmployerProfileData;
 use App\DataTransferObjects\Employer\UpdateEmployerProfileData;
 use App\Models\Employer\EmployerProfile;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 
 class EmployerRepository
 {
