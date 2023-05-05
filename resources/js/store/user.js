@@ -1,32 +1,18 @@
 import {defineStore} from 'pinia';
-import axios from 'axios';
 import authAxios from "../api/axiosConfig";
-import router from "../router";
+import axios from "axios";
 
-// const authAxios = axios.create({
-//     baseURL: '/api',
-// });
-
-export const useProfileStore = defineStore({
-    id: 'profile',
+export const useUserStore = defineStore({
+    id: 'userStore',
 
     state: () => ({
         user: null,
-        isUserLoaded: false,
-        loadingProfileInfo: false,
-        profileInfo: null,
-        loadingChangePassword: false,
-        profileInfoLoaded: false,
+        isLoading: false,
     }),
 
     getters: {
         getUser: (state) => state.user,
         getIsLoggedIn: (state) => !!state.user,
-        getIsUserLoaded: (state) => state.isUserLoaded,
-        getIsLoadingProfileInfo: (state) => state.loadingProfileInfo,
-        getProfileInfo: (state) => state.profileInfo,
-        getLoadingChangePassword: (state) => state.loadingChangePassword,
-        getIsProfileInfoLoaded: (state) => state.profileInfoLoaded
     },
 
     actions: {
@@ -46,10 +32,9 @@ export const useProfileStore = defineStore({
             try {
                 const response = await authAxios.get('/api/user');
                 const userData = response.data;
-                await this.setUser(userData)
-                this.isProfileInfoLoaded = true
+                await this.setUser(userData);
             } catch (error) {
-                console.error('Error getting user data:', error);
+                console.error('Error getting user data:', error.message);
             }
         },
 
@@ -62,9 +47,10 @@ export const useProfileStore = defineStore({
                 });
 
                 localStorage.setItem('auth_token', response.data.token);
-                await this.fetchUser()
-                return true
+                await this.fetchUser();
+                return true;
             } catch (error) {
+                console.error('Error logging in:', error.message);
                 return false;
             }
         },
@@ -85,61 +71,15 @@ export const useProfileStore = defineStore({
         },
 
         async logout() {
+            this.isLoading = true;
             try {
                 await authAxios.post('/api/logout');
                 localStorage.removeItem('auth_token');
-                this.user = null
-                this.profileInfo = null
-                this.profileInfoLoaded = false
+                this.user = null;
             } catch (error) {
-                console.error('Error logging out:', error);
+                console.error('Error logging out:', error.message);
             }
+            this.isLoading = false;
         },
-
-        async fetchUserProfile(userId) {
-            this.loadingProfileInfo = true
-            if (!this.profileInfoLoaded) {
-                try {
-                    const response = await authAxios.get(`/api/user/profile/${userId}`);
-                    this.profileInfo = response.data.data
-                } catch (error) {
-                    this.profileInfo = null
-                } finally {
-                    this.loadingProfileInfo = false;
-                    this.profileInfoLoaded = true;
-                }
-            }
-        },
-
-        async updateUserProfile(userId, payload) {
-            try {
-                const response = await authAxios.patch(`/api/user/profile/${userId}`, payload)
-                this.profileInfo = response.data.data
-            } catch (error) {
-                console.error("Error updating profile info:", error);
-            }
-        },
-
-        async createUserProfile(userId, payload) {
-            try {
-                const response = await authAxios.post(`/api/user/profile/${userId}`, payload);
-                this.profileInfo = response.data.data
-            } catch (error) {
-                this.profileInfo = null
-                console.error("Error creating profile info:", error);
-            }
-        },
-
-        async changeUserPassword(userId, password) {
-            this.loadingChangePassword = true
-            try {
-                const response = await authAxios.patch(`/api/user/${userId}/password`, password)
-                return response.status
-            } catch (error) {
-                return 400
-            } finally {
-                this.loadingChangePassword = false
-            }
-        }
     },
 });

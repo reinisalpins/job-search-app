@@ -1,27 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 
-:root {
-    --main-black: #1c1c1c;
-    --main-white: #fff;
-    --error-color: #ff6b6b;
-    --text-color: #000 !important;
-    --text-secondary-color: #666 !important;
-    --primary-color: #234E70 !important;
-    --primary-color-text: #fff !important;
-    --font-family: 'Source Sans Pro', sans-serif !important;
-    --inline-spacing: 10px !important;
-    --border-radius: 4px !important;
-    --focus-ring: 0 0 0 3px rgba(35, 78, 112, 0.5) !important;
-    --mask-bg: rgba(0, 0, 0, 0.5) !important;
-    --highlight-bg: #234E70 !important;
-    --highlight-text-color: #fff !important;
-}
-
+$main-grey: #d5d5d5;
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Source Sans Pro', sans-serif;
+    background-color: $main-grey;
 }
 
 * {
@@ -30,143 +15,13 @@ body {
     box-sizing: border-box;
 }
 
-.listings-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.container {
-    max-width: 1600px;
-    width: 100%;
-    padding: 20px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 20px;
-
-    @media screen and (max-width: 900px) {
-        padding: 20px 20px;
-    }
-
-    @media screen and (max-width: 1250px){
-        margin-top: 70px;
-    }
-}
-
 li {
     list-style-type: none;
 }
 
 a {
     text-decoration: none;
-}
-
-.auth-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-
-    @media screen and (max-width: 1250px) {
-        padding-top: 65px;
-    }
-
-    .auth-form-container {
-        max-width: 1600px;
-        width: 100%;
-        padding: 20px 50px;
-        display: flex;
-        align-items: center;
-        min-height: 500px;
-        gap: 50px;
-
-        @media screen and (max-width: 1000px) {
-            padding: 20px 20px;
-            flex-direction: column;
-        }
-
-        .text-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            h1 {
-                font-size: 3.5rem;
-                text-align: center;
-            }
-
-            @media screen and (max-width: 1300px) {
-                width: auto;
-                min-height: 100px;
-                padding: 10px;
-
-                h1 {
-                    font-size: 3rem !important;
-                }
-            }
-        }
-
-        .form-container {
-            flex: 1;
-
-            @media screen and (max-width: 1000px) {
-                width: 100%;
-            }
-
-            form {
-                display: flex;
-                width: 80%;
-                flex-direction: column;
-
-                @media screen and (max-width: 1300px) {
-                    width: 100%;
-                }
-
-                input {
-                    border-top: 2px solid black;
-                    border-left: 2px solid black;
-                    border-right: 2px solid black;
-                    border-bottom: none;
-                    padding: 15px;
-                    outline: none;
-                    font-size: 17px;
-
-                    &:focus {
-                        outline: none;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-.validation-container {
-    padding-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.submit-btn {
-    background-color: var(--main-black) !important;
-    color: var(--main-white) !important;
-    text-transform: uppercase !important;
-    border-radius: 0 !important;
-    border: none !important;
-    justify-content: center !important;
-
-    &:hover {
-        opacity: .9;
-        cursor: pointer;
-    }
-    &:focus {
-        box-shadow: none !important;
-    }
+    color: inherit;
 }
 
 .select-auth-type {

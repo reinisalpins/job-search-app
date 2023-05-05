@@ -4,17 +4,17 @@ import authAxios from "../api/axiosConfig";
 export const useEmployerStore = defineStore('employers', {
     state: () => ({
         employerProfile: null,
-        loadingEmployerProfile: false,
+        isLoading: false,
+        isFormLoading: false
     }),
 
     getters: {
         getEmployerProfileInfo: (state) => state.employerProfile,
-        isEmployerProfileLoading: (state) => state.loadingEmployerProfile,
     },
 
     actions: {
         async fetchEmployerProfile(userId) {
-            this.loadingEmployerProfile = true
+            this.isLoading = true
             try {
                 const response = await authAxios.get(`/api/employer/${userId}/profile`)
                 if (response.data.status) {
@@ -25,14 +25,17 @@ export const useEmployerStore = defineStore('employers', {
             } catch (error) {
                 console.log(error)
             }
-            this.loadingEmployerProfile = false
+            this.isLoading = false
         },
         async setEmployerProfile(userId, payload) {
+            this.isFormLoading = true
             try {
                 const response = await authAxios.post(`/api/employer/${userId}/profile`, payload)
                 this.employerProfile = response.data.data;
+                this.isFormLoading = false
                 return {success: true, errorMessage: null};
             } catch (error) {
+                this.isFormLoading = false
                 return {
                     success: false,
                     errorMessage: error.response?.data?.message || 'Aizpildiet laukus korekti un mēginiet vēlreiz'
@@ -41,17 +44,24 @@ export const useEmployerStore = defineStore('employers', {
         },
 
         async updateEmployerProfile(userId, payload) {
+            this.isFormLoading = true
             try {
                 const response = await authAxios.patch(`/api/employer/${userId}/profile`, payload)
                 this.employerProfile = response.data.data;
+                this.isFormLoading = false
                 return {success: true, errorMessage: null};
             } catch (error) {
+                this.isFormLoading = false
                 return {
                     success: false,
                     errorMessage: error.response?.data?.message || 'Aizpildiet laukus korekti un mēginiet vēlreiz'
                 };
             }
         },
+
+        async clearEmployerProfile() {
+            this.employerProfile = null
+        }
     },
 
 })
